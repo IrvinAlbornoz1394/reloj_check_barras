@@ -58,7 +58,7 @@
                     <li class="hidden-xl-up"><a href="" data-ma-action="search-open"><i class="zmdi zmdi-search"></i></a></li>
 
                     <li class="hidden-xs-down">
-                        <a  onclick="retardo();" class="top-nav__notify">
+                        <a class="top-nav__notify">
                             <i class="zmdi zmdi-comment-alt-text"></i>
                         </a>
                     </li>
@@ -84,18 +84,8 @@
                     </div>
 
                     <ul class="navigation">
-                        <li><a href="index.html"><i class="zmdi zmdi-home"></i> Home</a></li>
-
-                        <li class="navigation__sub navigation__sub--active navigation__sub--toggled">
-                            <a href=""><i class="zmdi zmdi-view-week"></i> Variants</a>
-
-                            <ul>
-                                <li class="navigation__active"><a href="hidden-sidebar.html">Hidden Sidebar</a></li>
-                                <li><a href="boxed-layout.html">Boxed Layout</a></li>
-                                <li><a href="hidden-sidebar-boxed-layout.html">Boxed Layout with Hidden Sidebar</a></li>
-                                <li><a href="top-navigation.html">Top Navigation</a></li>
-                            </ul>
-                        </li>
+                        <li class="navigation__active"><a href="index.php"><i class="zmdi zmdi-home"></i>Reloj</a></li>
+                        <li><a href="usuarios.php"><i class="zmdi zmdi-accounts"></i>Usuarios</a></li>
                     </ul>
                 </div>
             </aside>
@@ -106,8 +96,8 @@
                     <div class="card-header bg-light-blue">
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="widget-calendar__year">2019</div>
-                                <div class="widget-calendar__day">Lunes 09 de Marzo</div>
+                                <div class="widget-calendar__year" id="v_año"></div>
+                                <div class="widget-calendar__day" id="v_fecha"></div>
                             </div>
                             <!-- <a href="calendar.html" class="bg-orange btn btn--action waves-effect"><i class="zmdi zmdi-plus"></i></a> -->
                             <div class="col-md-6 text-right">
@@ -148,8 +138,8 @@
                                     <h2 id="hora_checada"></h2>
                                 </div>
                                 <div class="col-md-12">
-                                    <div class="alert alert-danger" id="alerta" role="alert" style="display:none;">
-                                        <h4 class="font-white"><strong>Retardo de 1 Minuto</strong></h4>
+                                    <div class="alert alert-danger mt-3" id="alerta" role="alert" style="display:none;">
+                                        <h4 class="font-white"><strong id="texto_alerta"></strong></h4>
                                     </div>
                                 </div>
                             </div>
@@ -184,41 +174,6 @@
             
         </main>
 
-        <!-- Older IE warning message -->
-            <!--[if IE]>
-                <div class="ie-warning">
-                    <h1>Warning!!</h1>
-                    <p>You are using an outdated version of Internet Explorer, please upgrade to any of the following web browsers to access this website.</p>
-
-                    <div class="ie-warning__downloads">
-                        <a href="http://www.google.com/chrome">
-                            <img src="img/browsers/chrome.png" alt="">
-                        </a>
-
-                        <a href="https://www.mozilla.org/en-US/firefox/new">
-                            <img src="img/browsers/firefox.png" alt="">
-                        </a>
-
-                        <a href="http://www.opera.com">
-                            <img src="img/browsers/opera.png" alt="">
-                        </a>
-
-                        <a href="https://support.apple.com/downloads/safari">
-                            <img src="img/browsers/safari.png" alt="">
-                        </a>
-
-                        <a href="https://www.microsoft.com/en-us/windows/microsoft-edge">
-                            <img src="img/browsers/edge.png" alt="">
-                        </a>
-
-                        <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-                            <img src="img/browsers/ie.png" alt="">
-                        </a>
-                    </div>
-                    <p>Sorry for the inconvenience!</p>
-                </div>
-            <![endif]-->
-
         <!-- ../vendors -->
         <script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
         <script src="vendors/bower_components/tether/dist/js/tether.min.js"></script>
@@ -241,6 +196,15 @@
             var tolerancia = 15;
             var retardo = false;
             var salida_antes = false;
+
+            $(document).ready(function(){
+                show5();
+                get_fecha();
+            })
+            // window.onload=show5
+
+
+
             function show5(){
                 if (!document.layers&&!document.all&&!document.getElementById)
                 return
@@ -260,11 +224,25 @@
                 setTimeout("show5()",1000)
             }
 
-        window.onload=show5
+            function get_fecha(hora_c){
+                f = new Date()
+                var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+                var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
 
-            function retardo(){
-                $("#alerta").show();
+                var fecha = diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
+
+                var año = f.getFullYear();
+                var dia = diasSemana[f.getDay()];
+                var mes = meses[f.getMonth()];
+
+                var fecha = dia+" "+f.getDate()+" de "+mes;
+
+                $("#v_año").html(año);
+                $("#v_fecha").html(fecha);
             }
+
+        
+
 
             $("#form_codigo").on('submit',function(e){
                 var codigo = $("#codigo").val();
@@ -284,15 +262,19 @@
                             $("#departamento").html(json.data.departamento);
                             $("#hora_checada").html(hora);
                             n++;
+
+                            var message = validar_horario(json.data.horario,hora,json.data.id_usuario,json.data.id_horario);
+
                             var html_tr = '<tr>'+
                                             '<td>'+n+'</td>'+
                                             '<td>'+json.data.nombres+" "+json.data.apellido_pat+" "+json.data.apellido_mat+'</td>'+
                                             '<td>'+json.data.puesto+'</td>'+
                                             '<td>'+json.data.departamento+'</td>'+
                                             '<td>'+hora+'</td>'+
+                                            '<td>'+message+'</td>'+
                                             '</tr>';
                             $("#tbody_checkout").append(html_tr);
-                            validar_horario(json.data.horario,hora,json.data.id_usuario,json.data.id_horario);
+                            
                         }else{
                             swal('Oops!',json.message,'error');
                         }
@@ -314,16 +296,19 @@
                     var h_e = horario[i].h_entrada;
                     var h_s = horario[i].h_salida;
                     var checkout = "NO SE REGISTRA";
+                    var message = "";
                     
                     var dif_antes = restaH(hora_c,h_e);
                     var dif_despues = restaH(h_e,hora_c);
                     
                     if(dif_antes < 40){
                         checkout = "Entrada";
+                        message = checkout;
                     }if (dif_despues < 40) {
                         checkout = "Entrada";
                         if(dif_despues > 10){
                             retardo = true;
+                            message = "Retardo de "+dif_despues+" Minutos";
                         }
                     }
                     var dif_antes = restaH(hora_c,h_s);
@@ -331,15 +316,37 @@
 
                     if(dif_antes < 40){
                         checkout = "Salida";
+                        message = checkout;
                         if(dif_antes > 10){
                             salida_antes = true;
+                            message = "Salida  de "+dif_despues+" Minutos antes";
                         }
 
                     }if (dif_despues < 40) {
                         checkout = "Salida";
+                        message = checkout;
                     }
 
-                    guardar_checada(id_usuario,);
+                    if(retardo == true){
+                        var mensaje = "Tienes un retardo de "+dif_despues+" Minutos";
+                        $("#texto_alerta").html(mensaje);
+                        $("#alerta").show();
+                    }
+                    if(salida_antes == true){
+                        var mensaje = "Estas saliendo "+dif_antes+" Minutos antes";
+                        $("#texto_alerta").html(mensaje);
+                        $("#alerta").show();
+                    }
+
+                    if(checkout == "NO SE REGISTRA"){
+                        var mensaje = "No se Regista Checada por fuera de tiempo";
+                        message = "fuera de tiempo"
+                        $("#texto_alerta").html(mensaje);
+                        $("#alerta").show();
+                    }
+                    console.log(message);
+                    guardar_checada(id_usuario,id_horario,hora_c,checkout);
+                    return message;
 
                 }
             }
@@ -362,15 +369,33 @@
                 return hrs;
             }
 
-            function set_fecha(date){
-                f = new Date(date+' 12:00:00 GMT-06:00');
-                console.log(date)
-                console.log(f);
-                var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
-                var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
 
-                var fecha = diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear();
-                return fecha;
+            function guardar_checada(id_usuario,id_horario,hora_c,checkout){
+                f = new Date();
+                var dd = f.getDate();
+                var mm = f.getMonth()+1; //f es 0!
+                var yyyy = f.getFullYear();
+
+                if(dd<10) {
+                    dd='0'+dd
+                } 
+
+                if(mm<10) {
+                    mm='0'+mm
+                } 
+
+                hoy = yyyy+'/'+mm+'/'+dd;
+                dia = get_dia_semana(f);
+                var datos = "opc=guardar_checkout&id_usuario="+id_usuario+"&id_horario="+id_horario+"&fecha="+hoy+"&dia_semana="+dia+"&hora="+hora_c+"&checkout="+checkout
+                console.log(datos);
+
+            }
+            
+
+            function get_dia_semana(f){
+                var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
+                var dia = diasSemana[f.getDay()];
+                return dia;
             }
 
         </script>

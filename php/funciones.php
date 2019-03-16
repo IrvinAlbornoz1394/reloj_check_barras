@@ -134,7 +134,7 @@
 		$id_plantel = 1;
 		$codigo_barras = $_POST['codigo'];
 
-		$query = "select u.id_usuario, u.nombres, u.apellido_pat, u.apellido_mat, u.puesto, img_foto, file_foto, d.nombre_departamento, h.id_horario from usuarios u INNER JOIN departamentos d on d.id_departamento = u.id_departamento INNER JOIN horarios h ON h.id_usuario = u.id_usuarioWhere u.id_plantel = $id_plantel && u.codigo_barras = $codigo_barras";
+		$query = "select u.id_usuario, u.nombres, u.apellido_pat, u.apellido_mat, u.puesto, img_foto, file_foto, d.nombre_departamento, h.id_horario from usuarios u INNER JOIN departamentos d on d.id_departamento = u.id_departamento INNER JOIN horarios h ON h.id_usuario = u.id_usuario Where u.id_plantel = $id_plantel && u.codigo_barras = $codigo_barras";
 		$result = $mysqli->query($query);
 		if(!$result){
 			$success = false;
@@ -187,32 +187,29 @@
 		$success = true;
 		$message = "OK";
 		$usuarios = [];
-		$filtro = "";
-		$id_empresa = $_SESSION['id_empresa'];
-		if(isset($_POST['id_empresa'])){
-			$id_empresa = $_POST['id_empresa'];
-		}
+		$id_plantel = 1;
 
-		if(isset($_POST['txt'])){
-			$filtro.= " && u.nombre_completo LIKE '%".$_POST['txt']."%' ";
-		}
-		if($_SESSION['tipo_usuario'] == 'admin'){
-			$filtro.= " && tipo_usuario != 'admin'";
-		}
 
-		$query = "Select u.* from usuarios u INNER JOIN usuarios_empresa ue ON u.id = ue.id_usuario Where tipo_usuario != 'superadmin' and ue.id_empresa = '$id_empresa'".$filtro;
+		$query = "SELECT u.*,tu.nombre_tipo_usuario, p.nombre_p, d.nombre_departamento FROM usuarios u inner join tipo_usuarios tu On u.id_tipo_usuario = tu.id_tipo_usuario INNER JOIN planteles p ON p.id_plantel = u.id_plantel INNER JOIN departamentos d ON d.id_departamento = u.id_departamento WHERE u.id_plantel =".$id_plantel;
 		$result = $mysqli->query($query);
 		if(!$result){
 			$success = false;
 			$message = "No se encontraron resultados de usuarios";
 		}
 		while ($row = mysqli_fetch_array($result)) {
-			$usuarios[] = array('id' => $row['id'],
-						  'nombre_completo' => $row['nombre_completo'],
-						  'nombre_usuario' => $row['nombre_usuario'],
-						  'tipo_usuario' => $row['tipo_usuario'],
-						  'estatus' => $row['estatus'],
-						  'tel_contacto' => $row['tel_contacto']);
+			$usuarios[] = array('id_usuario' => $row['id_usuario'],
+						  'nombres' => $row['nombres'],
+						  'apellido_pat' => $row['apellido_pat'],
+						  'apellido_mat' => $row['apellido_mat'],
+						  'puesto' => $row['puesto'],
+						  'img_foto' => $row['img_foto'],
+						  'file_foto' => $row['file_foto'],
+						  'id_contrato' => $row['id_tipo_contrato'],
+						  'id_departamento' => $row['id_departamento'],
+						  'tipo_usuario' => $row['nombre_tipo_usuario'],
+						  'plantel' => $row['nombre_p'],
+						  'departamento' => $row['nombre_departamento']
+						  );
 		}
 		$json = array('success' => $success,
 					  'message' => $message,
