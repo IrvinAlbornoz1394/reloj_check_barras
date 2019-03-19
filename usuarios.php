@@ -25,6 +25,11 @@
             .font-white{
                 color: #FFFF;
             }
+            
+            .usuario_active{
+                background: rgba(50,199,135,0.3);
+            }
+
 
         </style>
 
@@ -172,6 +177,7 @@
         <script src="js/app.min.js"></script>
 
         <script>
+            var ids = [];
             $(document).ready(function(){
                 get_usuarios();
             });
@@ -198,16 +204,16 @@
                             //         '</tr>';
 
                             html += '<div class="col-xl-2 col-lg-3 col-sm-4 col-6">'+
-                                        '<div class="contacts__item">'+
-                                            '<a href="" class="contacts__img">'+
+                                        '<div class="contacts__item item-usuario" style="cursor:pointer;" onclick="select(this,'+json.data[i].id_usuario+')">'+
+                                            '<span href="" class="contacts__img">'+
                                                 '<img src="img/usuarios/'+json.data[i].file_foto+'" alt="">'+
-                                            '</a>'+
+                                            '</span>'+
                                             '<div class="contacts__info">'+
                                                 '<strong>'+json.data[i].nombres+' '+json.data[i].apellido_pat+' '+json.data[i].apellido_mat+'</strong>'+
                                                 '<small>'+json.data[i].puesto+'</small>'+
                                                 '<small><u>'+json.data[i].departamento+'</u></small>'+
                                             '</div>'+
-                                            '<a href="nvo_usuario.php?id='+json.data[i].id_usuario+'" class="contacts__btn">Editar <i class="zmdi zmdi-edit zmdi-hc-fw"></i></a>'+
+                                            '<a href="nvo_usuario.php?id='+json.data[i].id_usuario+'" class="btn btn-sm">Editar <i class="zmdi zmdi-edit zmdi-hc-fw"></i></a>'+
                                         '</div>'+
                                     '</div>';
 
@@ -220,6 +226,19 @@
 
                     }
                 })
+            }
+
+            function select(item,id_usuario){
+                
+                if($(item).hasClass('usuario_active')){
+                    $(item).removeClass('usuario_active');   
+                    var i = ids.indexOf(id_usuario);
+                    ids.splice( i, 1 );
+                }else{
+                    $(item).addClass('usuario_active');
+                    ids.push(id_usuario);
+                }
+                console.log(ids);
             }
 
 

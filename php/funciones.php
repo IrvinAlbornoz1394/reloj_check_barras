@@ -298,7 +298,8 @@
 		    if ($tipo != 'image/jpeg' && $tipo != 'image/jpg' && $tipo != 'image/png' && $tipo != 'image/gif'){
 		        $message = "El archivo ".$nombreFoto." no es una imagen.";
 		        $success = false;
-		    }else if($size > 1024*1024){
+		    }else 
+		    if($size > 1024*1024){
 		        $message = "El archivo ".$nombreFoto." tiene un peso mayor a 1Mb.";
 		        $success = false;
 		    }else{

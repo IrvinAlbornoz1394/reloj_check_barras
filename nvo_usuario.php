@@ -122,9 +122,15 @@
                             <div class="row">
                                 <div class="col-md-3 text-center">
                                     <img src="img/usuarios/usuario.png" alt="" class="img-fluid" id="foto_usuario">
-                                    <input type="file" hidden="true" name="foto_usuario" id="input_subir_foto">
-                                    <button class="mt-3 btn btn-primary btn--icon-text waves-effect" id="btn_subir_foto"><i class="zmdi zmdi-upload"></i> Subir Foto</button>
-                                    <input type="file" accept="image/*" capture="camera">
+                                    <input type="file" accept="image/*" hidden="true" class="input_fie" id="input_subir_foto">
+                                    <input type="file" accept="image/*" capture="" hidden="true" class="input_fie" id="input_tomar_foto">
+                                    <button class="mt-3 btn btn-primary btn--icon-text waves-effect" id="btn_subir_foto">
+                                        <i class="zmdi zmdi-upload"></i> Subir Foto
+                                    </button>
+                                    <button class="mt-3 btn btn-success btn--icon-text waves-effect  d-sm-none" id="btn_tomar_foto">
+                                        <i class="zmdi zmdi-camera"></i>Tomar Foto
+                                    </button>
+                                    
 
 
                                 </div>
@@ -273,11 +279,25 @@
             $("#btn_subir_foto").click(function(e){
                 e.preventDefault();
                 $("#input_subir_foto").click();
-            })
-            
+            });
+
+            $("#btn_tomar_foto").click(function(e){
+                e.preventDefault();
+                $("#input_tomar_foto").click();
+            });
+        
 
             $("#input_subir_foto").change(function () {
-                console.log("ok");
+                $(".input_fie").attr('name','');
+                $(this).attr('name','foto_usuario');
+                /* $('img#foto_usuario').attr('src','../img/cargando.gif'); */
+                setTimeout(readURL(this), 1000);
+                // readURL(this);
+            });
+
+            $("#input_tomar_foto").change(function () {
+                $(".input_fie").attr('name','');
+                $(this).attr('name','foto_usuario');
                 /* $('img#foto_usuario').attr('src','../img/cargando.gif'); */
                 setTimeout(readURL(this), 1000);
                 // readURL(this);
