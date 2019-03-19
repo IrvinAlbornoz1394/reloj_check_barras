@@ -97,7 +97,7 @@
                         <h1>Empleados</h1>
 
                         <div class="actions">
-                            <button class="btn btn-primary btn--icon-text waves-effect"><i class="zmdi zmdi-plus"></i> Agregar Nuevo</button>
+                            <a href="nvo_usuario.php" class="btn btn-primary btn--icon-text waves-effect"><i class="zmdi zmdi-plus"></i> Agregar Nuevo</a>
                         </div>
                     </header>
 
@@ -108,9 +108,16 @@
                         </nav>
 
                         <div class="toolbar__search">
-                            <input type="text" placeholder="Search...">
+                            <input type="text" placeholder="Buscar...">
 
                             <i class="toolbar__search__close zmdi zmdi-long-arrow-left" data-ma-action="toolbar-search-close"></i>
+                        </div>
+                        <div class="actions">
+                            <i class="actions__item zmdi zmdi-search" data-ma-action="toolbar-search-open"></i>
+
+                            <div class="dropdown actions__item hidden-xs-down">
+                            <i class="zmdi zmdi-refresh zmdi-hc-fw"></i>
+                            </div>
                         </div>
                     </div>
 
@@ -193,13 +200,14 @@
                             html += '<div class="col-xl-2 col-lg-3 col-sm-4 col-6">'+
                                         '<div class="contacts__item">'+
                                             '<a href="" class="contacts__img">'+
-                                                '<img src="demo/img/contacts/1.jpg" alt="">'+
+                                                '<img src="img/usuarios/'+json.data[i].file_foto+'" alt="">'+
                                             '</a>'+
                                             '<div class="contacts__info">'+
                                                 '<strong>'+json.data[i].nombres+' '+json.data[i].apellido_pat+' '+json.data[i].apellido_mat+'</strong>'+
                                                 '<small>'+json.data[i].puesto+'</small>'+
+                                                '<small><u>'+json.data[i].departamento+'</u></small>'+
                                             '</div>'+
-                                            '<button class="contacts__btn">Following</button>'+
+                                            '<a href="nvo_usuario.php?id='+json.data[i].id_usuario+'" class="contacts__btn">Editar <i class="zmdi zmdi-edit zmdi-hc-fw"></i></a>'+
                                         '</div>'+
                                     '</div>';
 

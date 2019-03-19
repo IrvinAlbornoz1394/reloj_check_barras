@@ -12,6 +12,24 @@
 		case 'checkout':
 			checkout();
 			break;		
+		case 'get_usuarios':
+			get_usuarios();
+			break;
+		case 'guardar_usuario':
+			guardar_usuario();
+			break;
+		case 'get_tipo_usuarios':
+			get_tipo_usuarios();
+			break;
+		case 'get_departamentos':
+			get_departamentos();
+			break;
+		case 'get_usuario':
+			get_usuario();
+			break;
+		case 'guardar_checkout':
+			guardar_checkout();
+			break;
 		case 'carga_excel':
 			carga_excel();
 			break;
@@ -29,9 +47,6 @@
 			break;
 		case 'get_ventas':
 			get_ventas();
-			break;
-		case 'get_usuarios':
-			get_usuarios();
 			break;
 		case 'get_usuarios_sucursal':
 			get_usuarios_sucursal();
@@ -130,11 +145,12 @@
 		}
 		$success = true;
 		$message = "OK";
-		$usuarios = [];
+		$usuarios = "";
 		$id_plantel = 1;
+		$horas = [];
 		$codigo_barras = $_POST['codigo'];
 
-		$query = "select u.id_usuario, u.nombres, u.apellido_pat, u.apellido_mat, u.puesto, img_foto, file_foto, d.nombre_departamento, h.id_horario from usuarios u INNER JOIN departamentos d on d.id_departamento = u.id_departamento INNER JOIN horarios h ON h.id_usuario = u.id_usuario Where u.id_plantel = $id_plantel && u.codigo_barras = $codigo_barras";
+		$query = "select u.id_usuario, u.nombres, u.apellido_pat, u.apellido_mat, u.puesto, img_foto, file_foto, d.nombre_departamento, h.id_horario from usuarios u LEFT JOIN departamentos d on d.id_departamento = u.id_departamento LEFT JOIN horarios h ON h.id_usuario = u.id_usuario Where u.id_plantel = '$id_plantel' && u.codigo_barras = '$codigo_barras'";
 		$result = $mysqli->query($query);
 		if(!$result){
 			$success = false;
@@ -153,7 +169,7 @@
 					  );
 
 
-		$query = "Select h.* from horas h inner join horas_x_horario hxh ON h.id_hora INNER JOIN horarios hs ON hxh.id_horario = hs.id_horario Where hs.id_usuario =".$usuario['id_usuario'];
+		$query = "Select h.* from horas h inner join horas_x_horario hxh ON h.id_hora LEFT JOIN horarios hs ON hxh.id_horario = hs.id_horario Where hs.id_usuario =".$usuario['id_usuario'];
 		$result = $mysqli->query($query);
 		if(!$result){
 			$success = false;
@@ -216,6 +232,255 @@
 					  'data' => $usuarios);
 		echo json_encode($json);
 	}
+
+	function guardar_usuario(){
+		$mysqli = conexion();
+		if(!$mysqli){
+			$json = array('success' => false,
+			              'message' => 'Error al conectar con la BD');
+			echo json_encode($json);
+			exit();
+		}
+		$message = "Informacion Guardada Correctamente.";
+		$success = true;
+		$nombreFoto = "";
+		$fileIMG = "";
+		$save_imagen = false;
+
+		
+		$id_usuario = $_POST['id_usuario'];	
+		$id_plantel = 1;
+		$nombres = strtoupper($_POST['nombres']);
+		$apellido_pat = strtoupper($_POST['apellido_pat']);
+		$apellido_mat = strtoupper($_POST['apellido_mat']);
+		$puesto = strtoupper($_POST['puesto']);
+		$is_admin = 0;
+
+		$id_tipo_usuario = $_POST['tipo_usuario'];
+		$id_departamento = $_POST['departamento'];
+		$id_tipo_contrato = 1;
+		$codigo_barras = uniqid(10);
+
+		$clave = "";
+		$pass = "";
+
+
+		$img1 = ""; 
+		$img2 = "";
+		$img3 = "";
+
+		$admin1 = "";
+		$admin2 = "";
+		$admin3 = "";
+
+		if(isset($_POST['admin'])){
+			$clave = $_POST['nombre_usuario'];
+			$pass = md5($_POST['password']);
+
+			$is_admin = 1;
+
+			$admin1 = "clave_sesion,pass_sesion,";
+			$admin2 = "'$clave','$pass',";
+			$admin3 = "clave_sesion = '$clave', pass_sesion = '$pass',";
+		}
+
+
+		if(isset($_FILES["foto_usuario"]["name"]) && isset($_FILES["foto_usuario"]["name"][0])){
+			$file = $_FILES["foto_usuario"];
+			
+			/* Nombre de la foto original */
+			$nombreFoto = $file["name"];
+			$tipo = $file["type"];
+		    $ruta_provisional = $file["tmp_name"];
+			$size = $file["size"];
+
+		    $carpeta = "../img/usuarios/";
+		    if ($tipo != 'image/jpeg' && $tipo != 'image/jpg' && $tipo != 'image/png' && $tipo != 'image/gif'){
+		        $message = "El archivo ".$nombreFoto." no es una imagen.";
+		        $success = false;
+		    }else if($size > 1024*1024){
+		        $message = "El archivo ".$nombreFoto." tiene un peso mayor a 1Mb.";
+		        $success = false;
+		    }else{
+		    	$ext = pathinfo($nombreFoto, PATHINFO_EXTENSION);
+				$fileIMG = uniqid().".".$ext;
+				$src = $carpeta.$fileIMG;
+		        if(move_uploaded_file($ruta_provisional, $src)){
+					$message = "Foto Cargada";
+					$save_imagen = true;
+	        	}else{
+	        		$message = "La imagen no se pudo guardar";
+	        		$success = false;
+	        	}
+	        }
+		}
+
+		
+		if($save_imagen){
+				$img1 = 'img_foto,file_foto,';
+				$img2 = "'$nombreFoto','$fileIMG',";
+				$img3 = "img_foto = '$nombreFoto', file_foto = '$fileIMG',";
+		}
+
+		$query = "INSERT INTO usuarios (id_usuario,id_tipo_usuario,id_plantel,nombres,apellido_pat,apellido_mat,puesto,".$img1."admin,".$admin1."id_tipo_contrato,id_departamento,codigo_barras)
+			VALUES
+			('$id_usuario','$id_tipo_usuario','$id_plantel','$nombres','$apellido_pat','$apellido_mat','$puesto',".$img2."'$is_admin',".$admin2."'$id_tipo_contrato','$id_departamento','$codigo_barras')
+			ON DUPLICATE KEY UPDATE
+			id_tipo_usuario = '$id_tipo_usuario', id_plantel = '$id_plantel', nombres = '$nombres', apellido_pat = '$apellido_pat', apellido_mat = '$apellido_mat', puesto = '$puesto',".$img3." admin = '$is_admin',".$admin3." id_tipo_contrato = '$id_tipo_contrato', id_departamento = '$id_departamento'";
+		if(!$mysqli->query($query)){
+			$success = false;
+			$message = "Ocurrio un error en la consulta, intentalo mas tarde";
+		}
+	    $json = array('success' => $success,
+	    			  'message' => $message );
+		echo json_encode($json);
+	}
+
+	function get_tipo_usuarios(){
+		$mysqli = conexion();
+		if(!$mysqli){
+			$json = array('success' => false,
+			              'message' => 'Error al conectar con la BD');
+			echo json_encode($json);
+			exit();
+		}
+		$success = true;
+		$message = "OK";
+		$tipos = [];
+
+
+		$query = "SELECT * FROM tipo_usuarios";
+		$result = $mysqli->query($query);
+		if(!$result){
+			$success = false;
+			$message = "No se encontraron resultados de usuarios";
+		}
+		while ($row = mysqli_fetch_array($result)) {
+			$tipos[] = array(
+							'id_tipo' => $row['id_tipo_usuario'],
+							'nombre_tipo' => $row['nombre_tipo_usuario']
+						);
+		}
+		$json = array('success' => $success,
+					  'message' => $message,
+					  'data' => $tipos);
+		echo json_encode($json);
+	}
+	function get_departamentos(){
+		$mysqli = conexion();
+		if(!$mysqli){
+			$json = array('success' => false,
+			              'message' => 'Error al conectar con la BD');
+			echo json_encode($json);
+			exit();
+		}
+		$success = true;
+		$message = "OK";
+		$tipos = [];
+
+		$id_institucion =1;
+
+
+		$query = "SELECT * FROM departamentos Where id_institucion = $id_institucion";
+		$result = $mysqli->query($query);
+		if(!$result){
+			$success = false;
+			$message = "No se encontraron resultados de usuarios";
+		}
+		while ($row = mysqli_fetch_array($result)) {
+			$tipos[] = array(
+							'id_departamento' => $row['id_departamento'],
+							'nombre_departamento' => $row['nombre_departamento']
+						);
+		}
+		$json = array('success' => $success,
+					  'message' => $message,
+					  'data' => $tipos);
+		echo json_encode($json);
+	}
+
+	function get_usuario(){
+		$mysqli = conexion();
+		if(!$mysqli){
+			$json = array('success' => false,
+			              'message' => 'Error al conectar con la BD');
+			echo json_encode($json);
+			exit();
+		}
+		$id_usuario = $_POST['idu'];
+		$success = true;
+		$message = "OK";
+		$usuarios = "";
+		$id_plantel = 1;
+
+
+		$query = "SELECT u.*,tu.nombre_tipo_usuario, p.nombre_p, d.nombre_departamento FROM usuarios u inner join tipo_usuarios tu On u.id_tipo_usuario = tu.id_tipo_usuario INNER JOIN planteles p ON p.id_plantel = u.id_plantel INNER JOIN departamentos d ON d.id_departamento = u.id_departamento WHERE u.id_plantel =".$id_plantel." && u.id_usuario = ".$id_usuario;
+		$result = $mysqli->query($query);
+		if(!$result){
+			$success = false;
+			$message = "No se encontraron resultados de usuarios";
+		}
+		$row = mysqli_fetch_array($result);
+		$usuarios = array('id_usuario' => $row['id_usuario'],
+						'nombres' => $row['nombres'],
+						'apellido_pat' => $row['apellido_pat'],
+						'apellido_mat' => $row['apellido_mat'],
+						'puesto' => $row['puesto'],
+						'img_foto' => $row['img_foto'],
+						'file_foto' => $row['file_foto'],
+						'admin' => $row['admin'],
+						'clave' => $row['clave_sesion'],
+						'password' => $row['pass_sesion'],
+						'id_contrato' => $row['id_tipo_contrato'],
+						'id_departamento' => $row['id_departamento'],
+						'tipo_usuario' => $row['nombre_tipo_usuario'],
+						'plantel' => $row['nombre_p'],
+						'departamento' => $row['nombre_departamento']
+						);
+		$json = array('success' => $success,
+					  'message' => $message,
+					  'data' => $usuarios);
+		echo json_encode($json);
+	}
+
+	function guardar_checkout(){
+		$mysqli = conexion();
+		if(!$mysqli){
+			$json = array('success' => false,
+			              'message' => 'Error al conectar con la BD');
+			echo json_encode($json);
+			exit();
+		}
+		$id_usuario = $_POST['id_usuario'];
+		$id_horario = $_POST['id_horario'];
+		$fecha = $_POST['fecha'];
+		$dia_semana = $_POST['dia_semana'];
+		$hora = $_POST['hora'];
+		$checkout = $_POST['checkout'];
+		
+		$message = "Consulta realizada con éxito.";
+		$success = true;
+
+		if($checkout == 'Entrada'){
+			$ch = ',h_entrada';
+		}
+		if($checkout == 'Salida'){
+			$ch = ',h_salida';
+		}
+
+		$query = "INSERT INTO insidencias (id_usuario,id_horario,fecha,dia_semana".$ch.")
+			VALUES 
+			('$id_usuario','$id_horario','$fecha','$dia_semana','$hora')";
+		if(!$mysqli->query($query)){
+			$success = false;
+			$message = "Ocurrio un error en la consulta, intentalo mas tarde";
+		}
+		$json = array('success' => $success,
+					  'message' => $message);
+		echo json_encode($json);
+	}
+
+	/* Funciones Pendientes */
 
 	function cambiar_password(){
 		$mysqli = conexion();

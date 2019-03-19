@@ -255,15 +255,17 @@
                     //una vez finalizado correctamente
                     success: function(json){
                         if(json.success){
-                            var foto = 'medios/fotos_usuarios/'+json.data.file_foto;
+                            var foto = 'img/usuarios/'+json.data.file_foto;
                             $("#foto_usuario").attr('src',foto);
                             $("#nombre_usuario").html(json.data.nombres+" "+json.data.apellido_pat+" "+json.data.apellido_mat);
                             $("#puesto_usuario").html(json.data.puesto);
                             $("#departamento").html(json.data.departamento);
                             $("#hora_checada").html(hora);
                             n++;
-
+                            
                             var message = validar_horario(json.data.horario,hora,json.data.id_usuario,json.data.id_horario);
+
+                            
 
                             var html_tr = '<tr>'+
                                             '<td>'+n+'</td>'+
@@ -292,63 +294,71 @@
             
 
             function validar_horario(horario,hora_c,id_usuario,id_horario){
-                for (let i = 0; i < horario.length; i++) {
-                    var h_e = horario[i].h_entrada;
-                    var h_s = horario[i].h_salida;
-                    var checkout = "NO SE REGISTRA";
-                    var message = "";
-                    
-                    var dif_antes = restaH(hora_c,h_e);
-                    var dif_despues = restaH(h_e,hora_c);
-                    
-                    if(dif_antes < 40){
-                        checkout = "Entrada";
-                        message = checkout;
-                    }if (dif_despues < 40) {
-                        checkout = "Entrada";
-                        if(dif_despues > 10){
-                            retardo = true;
-                            message = "Retardo de "+dif_despues+" Minutos";
-                        }
-                    }
-                    var dif_antes = restaH(hora_c,h_s);
-                    var dif_despues = restaH(h_s,hora_c);
-
-                    if(dif_antes < 40){
-                        checkout = "Salida";
-                        message = checkout;
-                        if(dif_antes > 10){
-                            salida_antes = true;
-                            message = "Salida  de "+dif_despues+" Minutos antes";
-                        }
-
-                    }if (dif_despues < 40) {
-                        checkout = "Salida";
-                        message = checkout;
-                    }
-
-                    if(retardo == true){
-                        var mensaje = "Tienes un retardo de "+dif_despues+" Minutos";
-                        $("#texto_alerta").html(mensaje);
-                        $("#alerta").show();
-                    }
-                    if(salida_antes == true){
-                        var mensaje = "Estas saliendo "+dif_antes+" Minutos antes";
-                        $("#texto_alerta").html(mensaje);
-                        $("#alerta").show();
-                    }
-
-                    if(checkout == "NO SE REGISTRA"){
-                        var mensaje = "No se Regista Checada por fuera de tiempo";
-                        message = "fuera de tiempo"
-                        $("#texto_alerta").html(mensaje);
-                        $("#alerta").show();
-                    }
-                    console.log(message);
-                    guardar_checada(id_usuario,id_horario,hora_c,checkout);
+                var message = "";
+                if(id_horario == '' || id_horario == null){
+                    message = "USUARIO SIN HORARIO ASIGNADO";
+                    $("#texto_alerta").html(message);
+                    $("#alerta").show();
                     return message;
+                }else{
+                    for (let i = 0; i < horario.length; i++) {
+                        var h_e = horario[i].h_entrada;
+                        var h_s = horario[i].h_salida;
+                        var checkout = "NO SE REGISTRA";
+                        var message = "";
+                        
+                        var dif_antes = restaH(hora_c,h_e);
+                        var dif_despues = restaH(h_e,hora_c);
+                        
+                        if(dif_antes < 40){
+                            checkout = "Entrada";
+                            message = checkout;
+                        }if (dif_despues < 40) {
+                            checkout = "Entrada";
+                            if(dif_despues > 10){
+                                retardo = true;
+                                message = "Retardo de "+dif_despues+" Minutos";
+                            }
+                        }
+                        var dif_antes = restaH(hora_c,h_s);
+                        var dif_despues = restaH(h_s,hora_c);
 
+                        if(dif_antes < 40){
+                            checkout = "Salida";
+                            message = checkout;
+                            if(dif_antes > 10){
+                                salida_antes = true;
+                                message = "Salida  de "+dif_despues+" Minutos antes.";
+                            }
+
+                        }if (dif_despues < 40) {
+                            checkout = "Salida";
+                            message = checkout;
+                        }
+
+                        if(retardo == true){
+                            message = "Tienes un retardo de "+dif_despues+" Minutos.";
+                            $("#texto_alerta").html(message);
+                            $("#alerta").show();
+                        }
+                        if(salida_antes == true){
+                            message = "Estas saliendo "+dif_antes+" Minutos antes.";
+                            $("#texto_alerta").html(message);
+                            $("#alerta").show();
+                        }
+
+                        if(checkout == "NO SE REGISTRA"){
+                            message = "Fuera de tiempo admintido."
+                            $("#texto_alerta").html(message);
+                            $("#alerta").show();
+                        }else{
+                            guardar_checada(id_usuario,id_horario,hora_c,checkout);
+                        }
+                        return message;
+
+                    }
                 }
+                
             }
 
             function restaH(h1,h2){
@@ -387,7 +397,29 @@
                 hoy = yyyy+'/'+mm+'/'+dd;
                 dia = get_dia_semana(f);
                 var datos = "opc=guardar_checkout&id_usuario="+id_usuario+"&id_horario="+id_horario+"&fecha="+hoy+"&dia_semana="+dia+"&hora="+hora_c+"&checkout="+checkout
-                console.log(datos);
+
+
+                $.ajax({
+                    url: "php/funciones.php",
+                    type: "POST",
+                    data: datos,
+                    dataType: "json",
+                    //una vez finalizado correctamente
+                    success: function(json){
+                        if(json.success){
+                            console.log(json.message);
+                        }else{
+                            swal('Oops!',json.message,'error');
+                        }
+                    },
+                    //si ha ocurrido un error
+                    error: function(error){                    
+                        swal('Oops!','Error Fatal, consulta a suporte tecnico','error');
+                        console.log(error.responseText);                  
+                    }
+                });
+
+
 
             }
             
