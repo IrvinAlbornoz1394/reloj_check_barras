@@ -103,6 +103,7 @@
 
                         <div class="actions">
                             <a href="nvo_usuario.php" class="btn btn-primary btn--icon-text waves-effect"><i class="zmdi zmdi-plus"></i> Agregar Nuevo</a>
+                            <button href="nvo_usuario.php" id="btn_credenciales" class="btn btn-info btn--icon-text waves-effect" disabled><i class="zmdi zmdi-print"></i> Generar Credenciales</button>
                         </div>
                     </header>
 
@@ -239,7 +240,23 @@
                     ids.push(id_usuario);
                 }
                 console.log(ids);
+
+                if(ids.length > 0){
+                    $("#btn_credenciales").prop('disabled',false);
+                }else{
+                    $("#btn_credenciales").prop('disabled',true);
+                }
             }
+
+            $("#btn_credenciales").click(function(){
+                var json = {"credenciales":[]}
+                for(i = 0; i< ids.length; i++){
+                    json.credenciales.push(ids[i])
+                }
+                var datos = JSON.stringify(json);
+                
+                window.open('print.php?ids='+datos, '_blank');
+            });
 
 
         </script>
