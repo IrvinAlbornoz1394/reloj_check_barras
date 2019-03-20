@@ -119,7 +119,7 @@
                                             <i class="zmdi zmdi-accounts-list zmdi-hc-fw"></i>
                                         </button>
                                     </span>
-                                    <input type="text" name="codigo" class="form-control" id="codigo">
+                                    <input type="text" name="codigo" class="form-control" id="codigo" autocomplete="off">
                                 </div>
                             </form>
                             <br>                            
@@ -200,6 +200,7 @@
             $(document).ready(function(){
                 show5();
                 get_fecha();
+                $("#codigo").focus();
             })
             // window.onload=show5
 
@@ -220,11 +221,14 @@
                     seconds="0"+seconds
                     //change font size here to your desire
                     hora = hours+":"+minutes+":"+seconds;
+                    if(hours == 0 && seconds == 0){
+                        get_fecha();
+                    }
                     $("#hora_actual").html(hora+" Hrs");
                 setTimeout("show5()",1000)
             }
 
-            function get_fecha(hora_c){
+            function get_fecha(){
                 f = new Date()
                 var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
                 var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
@@ -239,6 +243,7 @@
 
                 $("#v_año").html(año);
                 $("#v_fecha").html(fecha);
+                
             }
 
         
@@ -276,6 +281,7 @@
                                             '<td>'+message+'</td>'+
                                             '</tr>';
                             $("#tbody_checkout").append(html_tr);
+                            setTimeout(function(){limpiar_vista()},8000);
                             
                         }else{
                             swal('Oops!',json.message,'error');
@@ -291,6 +297,18 @@
                 $(this)[0].reset();      
                 e.preventDefault();
             });
+
+
+            function limpiar_vista(){
+                $("#foto_usuario").attr('src','');
+                $("#nombre_usuario").html("");
+                $("#puesto_usuario").html("");
+                $("#departamento").html("");
+                $("#hora_checada").html("");
+                $("#texto_alerta").html("");
+                $("#alerta").hide();
+                $("#codigo").focus();
+            }
             
 
             function validar_horario(horario,hora_c,id_usuario,id_horario){

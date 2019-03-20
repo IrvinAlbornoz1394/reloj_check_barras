@@ -1,12 +1,13 @@
 <?php
 
-    require('fpdf/fpdf.php');
+    // require('fpdf/fpdf.php');
+    require('fpdf/code128.php');
     
 
     /* Si hay valores Creamos el PDF */
     if(isset($_GET['ids'])){
 
-        $fpdf =  new FPDF();
+        $fpdf =  new PDF_Code128();
 
         $ids = json_decode($_GET['ids']);
 		$credenciales =  $ids->credenciales;
@@ -51,7 +52,7 @@
                 $foto = "img/usuarios/usuario.png";
             }
 
-            $nombre = $row['nombres']." ".$row['apellido_mat']." ".$row['apellido_mat'];
+            $nombre = $row['nombres']." ".$row['apellido_pat']." ".$row['apellido_mat'];
 
             $plantel = $row['nombre_p'];
 
@@ -65,7 +66,7 @@
 
             $fpdf->AddPage();
             /* barcode('img/123456789.png', '123456789', 20, 'horizontal', 'code128', true); */
-            $fpdf->Image('img/credenciales/admin.PNG',10,10,113);
+            $fpdf->Image('img/credenciales/admin.PNG',10,10,118);
             $fpdf->Image($foto,40,22,27);
             $fpdf->SetFont('Helvetica','B',11);
             $fpdf->Ln(12);
@@ -78,33 +79,39 @@
             Tels: (999)9822915 /9822918";
             
             $fpdf->SetFont('Helvetica','B',9);
-            $fpdf->Cell(61,50,"",0,0,'L');
-            $fpdf->Cell(55, 5,utf8_decode( "Domicilio"));
+            $fpdf->Cell(63,50,"",0,0,'L');
+            $fpdf->Cell(60, 5,utf8_decode( "Domicilio"));
             $fpdf->Ln();
             $fpdf->SetFont('Helvetica','',9);
             $fpdf->SetFont('Helvetica','',9);
-            $fpdf->Cell(61,50,"",0,0,'L');
-            $fpdf->Cell(55, 5,utf8_decode( "Calle 55 No. 729."));
+            $fpdf->Cell(63,50,"",0,0,'L');
+            $fpdf->Cell(60, 5,utf8_decode( "Tablaje Catastral 31,800"));
             $fpdf->Ln();
-            $fpdf->Cell(61,50,"",0,0,'L');
-            $fpdf->Cell(55, 5,utf8_decode( "Frac. Pacabtun "));
+            $fpdf->Cell(63,50,"",0,0,'L');
+            $fpdf->Cell(60, 5,utf8_decode( "Entre km. 38 y 39."));
             $fpdf->Ln();
-            $fpdf->Cell(61,50,"",0,0,'L');
-            $fpdf->Cell(55, 5,utf8_decode( "C.P. 97160 "));
+            $fpdf->Cell(63,50,"",0,0,'L');
+            $fpdf->Cell(60, 5,utf8_decode( "Col. Polígono Chuburná"));
             $fpdf->Ln();
-            $fpdf->Cell(61,50,"",0,0,'L');
-            $fpdf->Cell(55, 5,utf8_decode( "Mérida, Yuc."));
+            $fpdf->Cell(63,50,"",0,0,'L');
+            $fpdf->Cell(60, 5,utf8_decode( "Mérida, Yuc. C.P. 97203"));
             $fpdf->Ln();
-            $fpdf->Cell(61,50,"",0,0,'L');
-            $fpdf->Cell(55, 5,utf8_decode( "Tels: (999)9822915 / 9822918"));
-            $fpdf->Ln(14);
-            $fpdf->Cell(58,50,"",0,0,'L');
+            $fpdf->Cell(63,50,"",0,0,'L');
+            $fpdf->Cell(60, 5,utf8_decode( "Tels: Tels (999) 9195535 / 9195536"));
+            $fpdf->Ln(18);
+            $fpdf->Cell(63,50,"",0,0,'C');
             $fpdf->Cell(55, 5,utf8_decode( "C.P. Arturo Sabido Gongora"),0,0,"C");
             $fpdf->Ln();
             $fpdf->Cell(58,50,"",0,0,'L');
-            $fpdf->Cell(55, 5,utf8_decode( "Director del Plantel"),0,0,"C");
+            $fpdf->Cell(63, 5,utf8_decode( "Director del Plantel"),0,0,"C");
             $fpdf->Ln(10);
-            $fpdf->Image('http://barcodes4.me/barcode/c128a/'.$codigo.'.jpg',69,72,52,25);
+
+
+            $fpdf->Code128(76,80,$codigo,45,15);
+            
+
+            // new barCodeGenrator($codigo,1,'img/codigo_barras/'.$nombre.'.jpg',105, 42,true);            
+            // $fpdf->Image('img/codigo_barras/'.$nombre.'.jpg');
             
 
             
@@ -113,24 +120,26 @@
             $fpdf->SetFont('Helvetica','B',12);
             $fpdf->cell(40,8,"Nombre:");
             $fpdf->Ln();
-            $fpdf->SetFont('Helvetica','',12);
+            $fpdf->SetFont('Helvetica','',9);
             $fpdf->SetLeftMargin(13);
             $fpdf->MultiCell(23, 5, $nombre);
-            $fpdf->Ln(11);
+            // $fpdf->Ln(11);
+            
+            $fpdf->setY(60);
             $fpdf->SetTextColor(255,255,255);
             $fpdf->SetFont('Helvetica','B',10);
-            $fpdf->cell(45,4,"Unidad Administrativa");
+            $fpdf->cell(45,5,"Unidad Administrativa");
             $fpdf->Ln();
             $fpdf->cell(15,4,"Plantel:");
             $fpdf->SetFont('Helvetica','',10);
             $fpdf->cell(20,4,utf8_decode($plantel));
 
-            $fpdf->Ln(8);
+            $fpdf->Ln(7);
             $fpdf->SetFont('Helvetica','B',11);
             $fpdf->SetTextColor(0,0,0);
             $fpdf->cell(15,4,"Puesto:");
             $fpdf->Ln();
-            $fpdf->SetFont('Helvetica','',11);
+            $fpdf->SetFont('Helvetica','',7);
             $fpdf->MultiCell(30,4,$puesto,0,"L");
 
 
