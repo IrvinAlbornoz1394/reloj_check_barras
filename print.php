@@ -77,7 +77,7 @@
             C.P. 97160 
             Mérida, Yuc. 
             Tels: (999)9822915 /9822918";
-            
+            $fpdf->SetTextColor(0,0,0);
             $fpdf->SetFont('Helvetica','B',9);
             $fpdf->Cell(63,50,"",0,0,'L');
             $fpdf->Cell(60, 5,utf8_decode( "Domicilio"));
@@ -122,7 +122,7 @@
             $fpdf->Ln();
             $fpdf->SetFont('Helvetica','',9);
             $fpdf->SetLeftMargin(13);
-            $fpdf->MultiCell(23, 5, $nombre);
+            $fpdf->MultiCell(23, 5,utf8_decode($nombre));
             // $fpdf->Ln(11);
             
             $fpdf->setY(60);
@@ -140,7 +140,14 @@
             $fpdf->cell(15,4,"Puesto:");
             $fpdf->Ln();
             $fpdf->SetFont('Helvetica','',7);
-            $fpdf->MultiCell(30,4,$puesto,0,"L");
+            $fpdf->MultiCell(30,4,utf8_decode($puesto),0,"L");
+
+            $fpdf->Ln();
+            $fpdf->setY(92);
+            $fpdf->setX(25);
+            $fpdf->SetTextColor(255,255,255);
+            $fpdf->SetFont('Helvetica','',8);
+            $fpdf->Cell(70,15,'2019',0,"C");
 
 
 

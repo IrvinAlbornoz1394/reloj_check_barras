@@ -167,9 +167,10 @@
 					  'file_foto' => $row['file_foto'],
 					  'id_horario' => $row['id_horario']
 					  );
+		
 
 
-		$query = "Select h.* from horas h inner join horas_x_horario hxh ON h.id_hora LEFT JOIN horarios hs ON hxh.id_horario = hs.id_horario Where hs.id_usuario =".$usuario['id_usuario'];
+		$query = "Select h.* from horas h inner join horas_x_horario hxh ON h.id_hora LEFT JOIN horarios hs ON hxh.id_horario = hs.id_horario Where hs.id_usuario =".$usuario['id_usuario']." group BY h.id_hora";
 		$result = $mysqli->query($query);
 		if(!$result){
 			$success = false;
