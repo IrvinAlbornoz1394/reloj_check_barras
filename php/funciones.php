@@ -27,9 +27,6 @@
 		case 'get_usuario':
 			get_usuario();
 			break;
-		case 'guardar_checkout':
-			guardar_checkout();
-			break;
 		case 'carga_excel':
 			carga_excel();
 			break;
@@ -168,7 +165,12 @@
 					  'id_horario' => $row['id_horario']
 					  );
 		
+		
+		$fecha = $_POST['fecha'];
+		$dia_semana = $_POST['dia_semana'];
+		$hora = $_POST['hora'];
 
+		$check = guardar_checkout($row['id_usuario'],$row['id_horario'],$fecha,$dia_semana,$hora);
 
 		$query = "Select h.* from horas h inner join horas_x_horario hxh ON h.id_hora LEFT JOIN horarios hs ON hxh.id_horario = hs.id_horario Where hs.id_usuario =".$usuario['id_usuario']." group BY h.id_hora";
 		$result = $mysqli->query($query);
@@ -177,20 +179,44 @@
 			$message = "No se realizo la consulta";
 		}
 
+		$hora_cercana = "";
 		while ($row = mysqli_fetch_array($result)){
 			$horas[] = array(
 					'h_entrada' => $row['h_entrada'],
 					'h_salida' => $row['h_salida']
-				 );			
+			);
 		}
 
+		$horaInicio = new DateTime($horas[0]['h_entrada']);
+		$horaTermino = new DateTime($hora);
+		/* $interval = $horaTermino->diff($horaInicio); */
+		$interval = $horaInicio->diff($horaTermino);
+		$h = $interval->format('%H horas %i minutos %s seconds');
+
 		$usuario['horario'] = $horas;
+		$usuario['dif'] = $h;
+		$usuario['h_e'] = $horaInicio;
+		$usuario['h_s'] = $horaInicio;
 
 
 		$json = array('success' => $success,
 					  'message' => $message,
 					  'data' => $usuario);
 		echo json_encode($json);
+	}
+
+	function guardar_checkout($id_usuario,$id_horario,$fecha,$dia_semana,$hora){
+		$mysqli = conexion();
+		$success = true;
+
+		$query = "INSERT INTO insidencias (id_usuario,id_horario,fecha,dia_semana,h_checkout)
+			VALUES 
+			('$id_usuario','$id_horario','$fecha','$dia_semana','$hora')";
+		if(!$mysqli->query($query)){
+			$success = false;
+			$message = "Ocurrio un error en la consulta, intentalo mas tarde";
+		}
+		return $success;
 	}
 
 	function get_usuarios(){
@@ -447,7 +473,7 @@
 		echo json_encode($json);
 	}
 
-	function guardar_checkout(){
+	/* function guardar_checkout(){
 		$mysqli = conexion();
 		if(!$mysqli){
 			$json = array('success' => false,
@@ -460,7 +486,6 @@
 		$fecha = $_POST['fecha'];
 		$dia_semana = $_POST['dia_semana'];
 		$hora = $_POST['hora'];
-		$checkout = $_POST['checkout'];
 		
 		$message = "Consulta realizada con éxito.";
 		$success = true;
@@ -482,7 +507,7 @@
 		$json = array('success' => $success,
 					  'message' => $message);
 		echo json_encode($json);
-	}
+	} */
 
 	/* Funciones Pendientes */
 

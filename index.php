@@ -125,17 +125,20 @@
                             <br>                            
                             <br>
                             <div class="row" id="info_usuario" style="display: :none;">
-                                <div class="col-md-7">
+                                <div class="col-md-10 ">
                                     <h3 id="nombre_usuario"></h3>
                                     <hr>
                                     <h3 id="puesto_usuario"></h3>
                                     <hr>
                                     <h3 id="departamento"></h3>
                                 </div>
-                                <div class="col-md-5 text-right">
+                                <div class="col-md-2 text-center">
                                     <h4>Marcado:</h4>    
-                                    <hr>                               
-                                    <h2 id="hora_checada"></h2>
+                                    <hr>
+                                    <span>
+                                    <h2 style="background:yellow;padding:10px;" id="hora_checada"></h2>
+                                    </span>                        
+                                    
                                 </div>
                                 <div class="col-md-12">
                                     <div class="alert alert-danger mt-3" id="alerta" role="alert" style="display:none;">
@@ -250,8 +253,26 @@
 
 
             $("#form_codigo").on('submit',function(e){
+                
+                f = new Date();
+                var dd = f.getDate();
+                var mm = f.getMonth()+1; //f es 0!
+                var yyyy = f.getFullYear();
+
+                if(dd<10) {
+                    dd='0'+dd
+                } 
+
+                if(mm<10) {
+                    mm='0'+mm
+                } 
+
+                hoy = yyyy+'/'+mm+'/'+dd;
+
+                dia = get_dia_semana(f);
+
                 var codigo = $("#codigo").val();
-                var datos = "opc=checkout&codigo="+codigo;
+                var datos = "opc=checkout&codigo="+codigo+"&fecha="+hoy+"&dia_semana="+dia+"&hora="+hora;
                 $.ajax({
                     url: "php/funciones.php",
                     type: "POST",
@@ -299,6 +320,46 @@
             });
 
 
+            /* function guardar_checada(id_usuario,id_horario,hora_c,checkout){
+                f = new Date();
+                var dd = f.getDate();
+                var mm = f.getMonth()+1; //f es 0!
+                var yyyy = f.getFullYear();
+
+                if(dd<10) {
+                    dd='0'+dd
+                } 
+
+                if(mm<10) {
+                    mm='0'+mm
+                } 
+
+                hoy = yyyy+'/'+mm+'/'+dd;
+                dia = get_dia_semana(f);
+                var datos = "opc=guardar_checkout&id_usuario="+id_usuario+"&id_horario="+id_horario+"&fecha="+hoy+"&dia_semana="+dia+"&hora="+hora_c+"&checkout="+checkout
+
+
+                $.ajax({
+                    url: "php/funciones.php",
+                    type: "POST",
+                    data: datos,
+                    dataType: "json",
+                    //una vez finalizado correctamente
+                    success: function(json){
+                        if(json.success){
+                            console.log(json.message);
+                        }else{
+                            swal('Oops!',json.message,'error');
+                        }
+                    },
+                    //si ha ocurrido un error
+                    error: function(error){                    
+                        swal('Oops!','Error Fatal, consulta a suporte tecnico','error');
+                        console.log(error.responseText);                  
+                    }
+
+            } */
+
             function limpiar_vista(){
                 $("#foto_usuario").attr('src','');
                 $("#nombre_usuario").html("");
@@ -311,7 +372,7 @@
             }
             
 
-            function validar_horario(horario,hora_c,id_usuario,id_horario){
+            /* function validar_horario(horario,hora_c,id_usuario,id_horario){
                 var message = "";
                 if(id_horario == '' || id_horario == null){
                     message = "USUARIO SIN HORARIO ASIGNADO";
@@ -377,7 +438,7 @@
                     }
                 }
                 
-            }
+            } */
 
             function restaH(h1,h2){
                 var h1 = h1.split(":"),
@@ -398,48 +459,7 @@
             }
 
 
-            function guardar_checada(id_usuario,id_horario,hora_c,checkout){
-                f = new Date();
-                var dd = f.getDate();
-                var mm = f.getMonth()+1; //f es 0!
-                var yyyy = f.getFullYear();
-
-                if(dd<10) {
-                    dd='0'+dd
-                } 
-
-                if(mm<10) {
-                    mm='0'+mm
-                } 
-
-                hoy = yyyy+'/'+mm+'/'+dd;
-                dia = get_dia_semana(f);
-                var datos = "opc=guardar_checkout&id_usuario="+id_usuario+"&id_horario="+id_horario+"&fecha="+hoy+"&dia_semana="+dia+"&hora="+hora_c+"&checkout="+checkout
-
-
-                $.ajax({
-                    url: "php/funciones.php",
-                    type: "POST",
-                    data: datos,
-                    dataType: "json",
-                    //una vez finalizado correctamente
-                    success: function(json){
-                        if(json.success){
-                            console.log(json.message);
-                        }else{
-                            swal('Oops!',json.message,'error');
-                        }
-                    },
-                    //si ha ocurrido un error
-                    error: function(error){                    
-                        swal('Oops!','Error Fatal, consulta a suporte tecnico','error');
-                        console.log(error.responseText);                  
-                    }
-                });
-
-
-
-            }
+            
             
 
             function get_dia_semana(f){
