@@ -288,9 +288,14 @@
                             $("#departamento").html(json.data.departamento);
                             $("#hora_checada").html(hora);
                             n++;
-                            
-                            var message = validar_horario(json.data.horario,hora,json.data.id_usuario,json.data.id_horario);
+                            var message = "";
+                            // var message = validar_horario(json.data.horario,hora,json.data.id_usuario,json.data.id_horario);
+                            if(json.show_message){
+                                $("#texto_alerta").html(json.message);
+                                $("#alerta").show();
+                                message = '<span class="badge badge-pill badge-danger">'+json.message+'</span>';
 
+                            }
                             
 
                             var html_tr = '<tr>'+
@@ -302,6 +307,7 @@
                                             '<td>'+message+'</td>'+
                                             '</tr>';
                             $("#tbody_checkout").append(html_tr);
+                            
                             setTimeout(function(){limpiar_vista()},8000);
                             
                         }else{

@@ -147,7 +147,26 @@
 		$horas = [];
 		$codigo_barras = $_POST['codigo'];
 
-		$query = "select u.id_usuario, u.nombres, u.apellido_pat, u.apellido_mat, u.puesto, img_foto, file_foto, d.nombre_departamento, h.id_horario from usuarios u LEFT JOIN departamentos d on d.id_departamento = u.id_departamento LEFT JOIN horarios h ON h.id_usuario = u.id_usuario Where u.id_plantel = '$id_plantel' && u.codigo_barras = '$codigo_barras'";
+		$query = "select u.id_usuario, 
+		u.nombres, 
+        u.apellido_pat, 
+        u.apellido_mat, 
+        u.puesto, 
+        img_foto, 
+        file_foto, 
+        d.nombre_departamento, 
+        h.id_horario 
+			from usuarios u 
+            LEFT JOIN 
+				departamentos d 
+                on 
+				d.id_departamento = u.id_departamento 
+			LEFT JOIN horario_x_usuario hu
+				on hu.id_usuario = u.id_usuario
+			LEFT JOIN horarios h 
+				ON h.id_horario = hu.id_horario
+		Where 
+	u.id_plantel = '$id_plantel' && u.codigo_barras = '$codigo_barras'";
 		$result = $mysqli->query($query);
 		if(!$result){
 			$success = false;
@@ -172,35 +191,93 @@
 
 		$check = guardar_checkout($row['id_usuario'],$row['id_horario'],$fecha,$dia_semana,$hora);
 
-		$query = "Select h.* from horas h inner join horas_x_horario hxh ON h.id_hora LEFT JOIN horarios hs ON hxh.id_horario = hs.id_horario Where hs.id_usuario =".$usuario['id_usuario']." group BY h.id_hora";
-		$result = $mysqli->query($query);
-		if(!$result){
-			$success = false;
-			$message = "No se realizo la consulta";
-		}
+
+		// // DESCOMENTAR PARA FUNCION DE RETARDOS
+		// $query = "Select h.* from horas h 
+		// LEFT join 
+  //       horas_x_horario hxh 
+		// 	ON 
+		// h.id_hora =  hxh.id_hora
+		// LEFT JOIN 
+		// horarios hs 
+  //           ON 
+		// hxh.id_horario = hs.id_horario
+		// 	LEFT JOIN 
+		// horario_x_usuario hu
+  //           on hu.id_horario = hs.id_horario
+  //       Where hu.id_usuario =".$row['id_usuario']." group BY h.id_hora";
+		// $result = $mysqli->query($query);
+		// if(!$result){
+		// 	$success = false;
+		// 	$message = "No se realizo la consulta";
+		// }
 
 		$hora_cercana = "";
-		while ($row = mysqli_fetch_array($result)){
-			$horas[] = array(
-					'h_entrada' => $row['h_entrada'],
-					'h_salida' => $row['h_salida']
-			);
-		}
+		$horachecada = "";
+		$h = "";
+		$check = '';
+		$show_message = false;
 
-		$horaInicio = new DateTime($horas[0]['h_entrada']);
-		$horaTermino = new DateTime($hora);
-		/* $interval = $horaTermino->diff($horaInicio); */
-		$interval = $horaInicio->diff($horaTermino);
-		$h = $interval->format('%H horas %i minutos %s seconds');
+		// while ($row = mysqli_fetch_array($result)){
+
+		// 	$horaEntrada = new DateTime($row['h_entrada']);
+		// 	$horaSalida = new DateTime($row['h_salida']);
+		// 	$horachecada = new DateTime($hora);
+		// 	$interval_entrada = $horachecada->diff($horaEntrada);
+		// 	$interval_salida = $horachecada->diff($horaSalida);
+
+			
+		// 	$difE = $interval_entrada->format('%H');
+		// 	$difE = $difE*60;
+
+
+		// 	$difS = $interval_salida->format('%H');
+		// 	$difS = $difS*60;
+			
+		// 	if($difE < 50){
+		// 		$hora_cercana = $horaEntrada;
+		// 		$check = 'E';
+		// 		$h = $difE;
+		// 	}
+		// 	if($difS < 50){
+		// 		$hora_cercana = $horaSalida;
+		// 		$check = 'S';
+		// 		$h = $difS;
+		// 	}
+		// 	// $interval = $horaInicio->diff($horaTermino);
+		// 	// $h = $interval->format('%H horas %i minutos %s seconds');
+
+		// }
+
+
+		// if($hora_cercana == ""){
+		// 	$message = "Fuera de Tiempo Permitido";
+		// 	$show_message = true;
+		// }else{
+		// 	$diff = $horachecada->diff($hora_cercana);
+		// 	if($check == 'E'){
+		// 		if($hora_cercana < $horachecada){
+		// 			$message = "retardo de ".$diff->format('%H horas %i minutos');
+		// 		}
+		// 	}
+		// 	if($check == 'S'){
+		// 		if($hora_cercana > $horachecada){
+		// 			$message = "Estas Saliendo ".$diff->format('%H horas %i minutos')." antes";
+		// 		}
+		// 	}
+		
+			
+		// }
+
 
 		$usuario['horario'] = $horas;
-		$usuario['dif'] = $h;
-		$usuario['h_e'] = $horaInicio;
-		$usuario['h_s'] = $horaInicio;
+		$usuario['h_horario'] = $hora_cercana;
+		$usuario['h_c'] = $horachecada;
 
 
 		$json = array('success' => $success,
 					  'message' => $message,
+					  'show_message' => $show_message,
 					  'data' => $usuario);
 		echo json_encode($json);
 	}
