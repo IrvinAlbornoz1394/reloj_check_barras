@@ -226,6 +226,7 @@
                     hora = hours+":"+minutes+":"+seconds;
                     if(hours == 0 && seconds == 0){
                         get_fecha();
+                        $("#tbody_checkout").html("");
                     }
                     $("#hora_actual").html(hora+" Hrs");
                 setTimeout("show5()",1000)
@@ -281,6 +282,9 @@
                     //una vez finalizado correctamente
                     success: function(json){
                         if(json.success){
+                            if(json.check_falso){
+                                return;
+                            }
                             var foto = 'img/usuarios/'+json.data.file_foto;
                             $("#foto_usuario").attr('src',foto);
                             $("#nombre_usuario").html(json.data.nombres+" "+json.data.apellido_pat+" "+json.data.apellido_mat);

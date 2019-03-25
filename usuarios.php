@@ -91,6 +91,7 @@
                     <ul class="navigation">
                         <li><a href="index.php"><i class="zmdi zmdi-home"></i>Reloj</a></li>
                         <li class="navigation__active"><a href="usuarios.php"><i class="zmdi zmdi-accounts"></i>Usuarios</a></li>
+                        <li><a href="registros.php"><i class="zmdi zmdi-home"></i>Registros</a></li>
                     </ul>
                 </div>
             </aside>
@@ -160,15 +161,7 @@
         <script src="vendors/bower_components/jquery.scrollbar/jquery.scrollbar.min.js"></script>
         <script src="vendors/bower_components/jquery-scrollLock/jquery-scrollLock.min.js"></script>
 
-        
-
-        <!-- Vendors: Data tables -->
-        <script src="vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
-        <script src="vendors/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-        <script src="vendors/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
-        <script src="vendors/bower_components/jszip/dist/jszip.min.js"></script>
-        <script src="vendors/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
-
+    
 
         <script src="vendors/bower_components/autosize/dist/autosize.min.js"></script>
         <script src="vendors/bower_components/sweetalert2/dist/sweetalert2.min.js"></script>

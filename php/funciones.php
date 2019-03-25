@@ -15,6 +15,9 @@
 		case 'get_usuarios':
 			get_usuarios();
 			break;
+		case 'get_nom_usuarios':
+			get_nom_usuarios();
+			break;
 		case 'guardar_usuario':
 			guardar_usuario();
 			break;
@@ -146,6 +149,7 @@
 		$id_plantel = 1;
 		$horas = [];
 		$codigo_barras = $_POST['codigo'];
+		$check_falso = true;
 
 		$query = "select u.id_usuario, 
 		u.nombres, 
@@ -189,7 +193,12 @@
 		$dia_semana = $_POST['dia_semana'];
 		$hora = $_POST['hora'];
 
-		$check = guardar_checkout($row['id_usuario'],$row['id_horario'],$fecha,$dia_semana,$hora);
+		if($row['id_usuario'] !== null){
+			$check = guardar_checkout($row['id_usuario'],$row['id_horario'],$fecha,$dia_semana,$hora);	
+			$check_falso = false;
+		}
+
+		
 
 
 		// // DESCOMENTAR PARA FUNCION DE RETARDOS
@@ -278,6 +287,7 @@
 		$json = array('success' => $success,
 					  'message' => $message,
 					  'show_message' => $show_message,
+					  'check_falso' => $check_falso,
 					  'data' => $usuario);
 		echo json_encode($json);
 	}
@@ -285,10 +295,8 @@
 	function guardar_checkout($id_usuario,$id_horario,$fecha,$dia_semana,$hora){
 		$mysqli = conexion();
 		$success = true;
-
-		$query = "INSERT INTO insidencias (id_usuario,id_horario,fecha,dia_semana,h_checkout)
-			VALUES 
-			('$id_usuario','$id_horario','$fecha','$dia_semana','$hora')";
+		$id_horario = 1;
+		$query = "INSERT INTO insidencias (id_usuario,id_horario,fecha,dia_semana,h_checkout) VALUES  ('$id_usuario','$id_horario','$fecha','$dia_semana','$hora')";
 		if(!$mysqli->query($query)){
 			$success = false;
 			$message = "Ocurrio un error en la consulta, intentalo mas tarde";
@@ -331,6 +339,42 @@
 						  'departamento' => $row['nombre_departamento']
 						  );
 		}
+		$json = array('success' => $success,
+					  'message' => $message,
+					  'data' => $usuarios);
+		echo json_encode($json);
+	}
+
+	function get_nom_usuarios(){
+		$mysqli = conexion();
+		if(!$mysqli){
+			$json = array('success' => false,
+			              'message' => 'Error al conectar con la BD');
+			echo json_encode($json);
+			exit();
+		}
+		$success = true;
+		$message = "OK";
+		$usuarios = [];
+		$id_plantel = 1;
+		$id_tipo = $_POST['id_tipo'];
+
+
+		$query = "SELECT id_usuario, nombres, apellido_pat, apellido_mat from usuarios WHERE id_tipo_usuario = $id_tipo AND id_plantel =".$id_plantel;
+		$result = $mysqli->query($query);
+		if(!$result){
+			$success = false;
+			$message = "No se encontraron resultados de usuarios";
+		}else{
+			while ($row = mysqli_fetch_array($result)) {
+			$usuarios[] = array('id_usuario' => $row['id_usuario'],
+						  'nombres' => $row['nombres'],
+						  'apellido_pat' => $row['apellido_pat'],
+						  'apellido_mat' => $row['apellido_mat']
+						  );
+			}	
+		}
+		
 		$json = array('success' => $success,
 					  'message' => $message,
 					  'data' => $usuarios);

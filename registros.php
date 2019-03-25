@@ -8,9 +8,13 @@
         <link rel="stylesheet" href="vendors/bower_components/material-design-iconic-font/dist/css/material-design-iconic-font.min.css">
         <link rel="stylesheet" href="vendors/bower_components/animate.css/animate.min.css">
         <link rel="stylesheet" href="vendors/bower_components/jquery.scrollbar/jquery.scrollbar.css">
+        <link rel="stylesheet" href="vendors/bower_components/sweetalert2/dist/sweetalert2.min.css">
+        <link rel="stylesheet" href="vendors/bower_components/select2/dist/css/select2.min.css">
+        <link rel="stylesheet" href="vendors/bower_components/flatpickr/dist/flatpickr.min.css" />
 
         <!-- App styles -->
         <link rel="stylesheet" href="css/app.min.css">
+
     </head>
 
     <body data-ma-theme="green">
@@ -48,7 +52,7 @@
                 </ul>
             </header>
 
-            <aside class="sidebar">
+            <aside class="sidebar sidebar--hidden">
                 <div class="scrollbar-inner">
                     <div class="user">
                         <div class="user__info" data-toggle="dropdown">
@@ -67,186 +71,17 @@
                     </div>
 
                     <ul class="navigation">
-                        <li><a href="index.html"><i class="zmdi zmdi-home"></i> Home</a></li>
-
-                        <li class="navigation__sub">
-                            <a href=""><i class="zmdi zmdi-view-week"></i> Variants</a>
-
-                            <ul>
-                                <li><a href="hidden-sidebar.html">Hidden Sidebar</a></li>
-                                <li><a href="boxed-layout.html">Boxed Layout</a></li>
-                                <li><a href="hidden-sidebar-boxed-layout.html">Boxed Layout with Hidden Sidebar</a></li>
-                                <li><a href="top-navigation.html">Top Navigation</a></li>
-                            </ul>
-                        </li>
-
-                        <li><a href="typography.html"><i class="zmdi zmdi-format-underlined"></i> Typography</a></li>
-
-                        <li><a href="widgets.html"><i class="zmdi zmdi-widgets"></i> Widgets</a></li>
-
-                        <li class="navigation__sub navigation__sub--active navigation__sub--toggled">
-                            <a href=""><i class="zmdi zmdi-view-list"></i> Tables</a>
-
-                            <ul>
-                                <li><a href="html-table.html">HTML Table</a></li>
-                                <li class="navigation__active"><a href="data-table.html">Data Table</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="navigation__sub">
-                            <a href=""><i class="zmdi zmdi-collection-text"></i> Forms</a>
-
-                            <ul>
-                                <li><a href="form-elements.html">Basic Form Elements</a></li>
-                                <li><a href="form-components.html">Form Components</a></li>
-                                <li><a href="form-validation.html">Form Validation</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="navigation__sub">
-                            <a href=""><i class="zmdi zmdi-swap-alt"></i> User Interface</a>
-
-                            <ul>
-                                <li><a href="colors.html">Colors</a></li>
-                                <li><a href="css-animations.html">CSS Animations</a></li>
-                                <li><a href="buttons.html">Buttons</a></li>
-                                <li><a href="icons.html">Icons</a></li>
-                                <li><a href="listview.html">Listview</a></li>
-                                <li><a href="toolbars.html">Toolbars</a></li>
-                                <li><a href="cards.html">Cards</a></li>
-                                <li><a href="alerts.html">Alerts</a></li>
-                                <li><a href="badges.html">Badges</a></li>
-                                <li><a href="breadcrumbs.html">Bredcrumbs</a></li>
-                                <li><a href="jumbotron.html">Jumbotron</a></li>
-                                <li><a href="navs.html">Navs</a></li>
-                                <li><a href="pagination.html">Pagination</a></li>
-                                <li><a href="progress.html">Progress</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="navigation__sub">
-                            <a href=""><i class="zmdi zmdi-group-work"></i> Javascript Components</a>
-
-                            <ul class="navigation__sub">
-                                <li><a href="carousel.html">Carousel</a></li>
-                                <li><a href="collapse.html">Collapse</a></li>
-                                <li><a href="dropdowns.html">Dropdowns</a></li>
-                                <li><a href="modals.html">Modals</a></li>
-                                <li><a href="popover.html">Popover</a></li>
-                                <li><a href="tabs.html">Tabs</a></li>
-                                <li><a href="tooltips.html">Tooltips</a></li>
-                                <li><a href="notifications-alerts.html">Notifications & Alerts</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="navigation__sub">
-                            <a href=""><i class="zmdi zmdi-trending-up"></i> Charts</a>
-
-                            <ul>
-                                <li><a href="flot-charts.html">Flot</a></li>
-                                <li><a href="other-charts.html">Other Charts</a></li>
-                            </ul>
-                        </li>
-
-                        <li><a href="calendar.html"><i class="zmdi zmdi-calendar"></i> Calendar</a></li>
-
-                        <li><a href="photo-gallery.html"><i class="zmdi zmdi-image"></i> Photo Gallery</a></li>
-
-                        <li class="navigation__sub">
-                            <a href=""><i class="zmdi zmdi-collection-item"></i> Sample Pages</a>
-
-                            <ul>
-                                <li><a href="profile-about.html">Profile</a></li>
-                                <li><a href="messages.html">Messages</a></li>
-                                <li><a href="contacts.html">Contacts</a></li>
-                                <li><a href="groups.html">Groups</a></li>
-                                <li><a href="pricing-tables.html">Pricing Tables</a></li>
-                                <li><a href="invoice.html">Invoice</a></li>
-                                <li><a href="todo-lists.html">Todo Lists</a></li>
-                                <li><a href="notes.html">Notes</a></li>
-                                <li><a href="login.html">Login & SignUp</a></li>
-                                <li><a href="lockscreen.html">Lockscreen</a></li>
-                                <li><a href="404.html">404</a></li>
-                                <li><a href="empty.html">Empty Page</a></li>
-                            </ul>
-                        </li>
+                        <li><a href="index.php"><i class="zmdi zmdi-home"></i>Reloj</a></li>
+                        <li><a href="usuarios.php"><i class="zmdi zmdi-accounts"></i>Usuarios</a></li>
+                        <li class="navigation__active"><a href="registros.php"><i class="zmdi zmdi-home"></i>Reloj</a></li>
                     </ul>
                 </div>
             </aside>
-            <aside class="chat">
-                <div class="chat__header">
-                    <h2 class="chat__title">Chat <small>Currently 20 contacts online</small></h2>
 
-                    <div class="chat__search">
-                        <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Search...">
-                            <i class="form-group__bar"></i>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="listview listview--hover chat__buddies scrollbar-inner">
-                    <a class="listview__item chat__available">
-                        <img src="demo/img/profile-pics/7.jpg" class="listview__img" alt="">
-
-                        <div class="listview__content">
-                            <div class="listview__heading">Jeannette Lawson</div>
-                            <p>hey, how are you doing.</p>
-                        </div>
-                    </a>
-
-                    <a class="listview__item chat__available">
-                        <img src="demo/img/profile-pics/5.jpg" class="listview__img" alt="">
-
-                        <div class="listview__content">
-                            <div class="listview__heading">Jeannette Lawson</div>
-                            <p>hmm...</p>
-                        </div>
-                    </a>
-
-                    <a class="listview__item chat__away">
-                        <img src="demo/img/profile-pics/3.jpg" class="listview__img" alt="">
-
-                        <div class="listview__content">
-                            <div class="listview__heading">Jeannette Lawson</div>
-                            <p>all good</p>
-                        </div>
-                    </a>
-
-                    <a class="listview__item">
-                        <img src="demo/img/profile-pics/8.jpg" class="listview__img" alt="">
-
-                        <div class="listview__content">
-                            <div class="listview__heading">Jeannette Lawson</div>
-                            <p>morbi leo risus portaac consectetur vestibulum at eros.</p>
-                        </div>
-                    </a>
-
-                    <a class="listview__item">
-                        <img src="demo/img/profile-pics/6.jpg" class="listview__img" alt="">
-
-                        <div class="listview__content">
-                            <div class="listview__heading">Jeannette Lawson</div>
-                            <p>fusce dapibus</p>
-                        </div>
-                    </a>
-
-                    <a class="listview__item chat__busy">
-                        <img src="demo/img/profile-pics/9.jpg" class="listview__img" alt="">
-
-                        <div class="listview__content">
-                            <div class="listview__heading">Jeannette Lawson</div>
-                            <p>cras mattis consectetur purus sit amet fermentum.</p>
-                        </div>
-                    </a>
-                </div>
-
-                <a href="messages.html" class="btn btn--action btn--fixed btn-danger"><i class="zmdi zmdi-plus"></i></a>
-            </aside>
-
-            <section class="content">
+            <section class="content content--full">
                 <header class="content__title">
-                    <h1>DATA TABLES</h1>
+                    <h1>Registro de Insidencias</h1>
 
                     <div class="actions">
                             <a href="" class="actions__item zmdi zmdi-trending-up"></a>
@@ -265,8 +100,43 @@
                 
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">Basic example</h2>
-                        <small class="card-subtitle">DataTables is a plug-in for the jQuery Javascript library. It is a highly flexible tool, based upon the foundations of progressive enhancement, and will add advanced interaction controls to any HTML table.</small>
+                        <form action="" id="form_insidencias">
+                            <div class="row align-items-end">
+                                <div class="col-md-3">
+                                    <label>Tipo Usuario</label>
+                                    <select class="select2 form-control" name="tipo_usuario" id="select_tipo" data-minimum-results-for-search="Infinity" >
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Fecha Inicio</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
+                                        <div class="form-group">
+                                            <input type="text" name="fecha_i" class="form-control date-picker" placeholder="Pick a date">
+                                            <i class="form-group__bar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Fecha Final</label>
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-calendar"></i></span>
+                                        <div class="form-group">
+                                            <input type="text" name="fecha_f" class="form-control date-picker" placeholder="Pick a date">
+                                            <i class="form-group__bar"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label>Empleado</label>
+                                    <select class="select2 form-control" id="select_usuario" name="usuario">
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-info btn--icon waves-effect"><i class="zmdi zmdi-search"></i></button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
 
                     <div class="card-block">
@@ -771,51 +641,19 @@
                     </ul>
                 </footer>
             </section>
+
+            
         </main>
 
-        <!-- Older IE warning message -->
-            <!--[if IE]>
-                <div class="ie-warning">
-                    <h1>Warning!!</h1>
-                    <p>You are using an outdated version of Internet Explorer, please upgrade to any of the following web browsers to access this website.</p>
-
-                    <div class="ie-warning__downloads">
-                        <a href="http://www.google.com/chrome">
-                            <img src="img/browsers/chrome.png" alt="">
-                        </a>
-
-                        <a href="https://www.mozilla.org/en-US/firefox/new">
-                            <img src="img/browsers/firefox.png" alt="">
-                        </a>
-
-                        <a href="http://www.opera.com">
-                            <img src="img/browsers/opera.png" alt="">
-                        </a>
-
-                        <a href="https://support.apple.com/downloads/safari">
-                            <img src="img/browsers/safari.png" alt="">
-                        </a>
-
-                        <a href="https://www.microsoft.com/en-us/windows/microsoft-edge">
-                            <img src="img/browsers/edge.png" alt="">
-                        </a>
-
-                        <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-                            <img src="img/browsers/ie.png" alt="">
-                        </a>
-                    </div>
-                    <p>Sorry for the inconvenience!</p>
-                </div>
-            <![endif]-->
-
-        <!-- Javascript -->
-        <!-- Vendors -->
+        <!-- ../vendors -->
         <script src="vendors/bower_components/jquery/dist/jquery.min.js"></script>
         <script src="vendors/bower_components/tether/dist/js/tether.min.js"></script>
         <script src="vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
         <script src="vendors/bower_components/Waves/dist/waves.min.js"></script>
         <script src="vendors/bower_components/jquery.scrollbar/jquery.scrollbar.min.js"></script>
         <script src="vendors/bower_components/jquery-scrollLock/jquery-scrollLock.min.js"></script>
+
+        
 
         <!-- Vendors: Data tables -->
         <script src="vendors/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
@@ -824,7 +662,80 @@
         <script src="vendors/bower_components/jszip/dist/jszip.min.js"></script>
         <script src="vendors/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
 
+
+        <script src="vendors/bower_components/autosize/dist/autosize.min.js"></script>
+        <script src="vendors/bower_components/sweetalert2/dist/sweetalert2.min.js"></script>
+
+        <script src="vendors/bower_components/select2/dist/js/select2.full.min.js"></script>
+
+        <script src="vendors/bower_components/flatpickr/dist/flatpickr.min.js"></script>
+
+
         <!-- App functions and actions -->
         <script src="js/app.min.js"></script>
+        
+        <script>
+            $(document).ready(function(){
+                // $("#select_tipo").select2({placeholder: 'Selecciona una opción'});    
+                $("#select_usuario").select2({placeholder: 'Selecciona una opción'});    
+                get_tipo_usuarios();
+            });
+            
+            $("#select_tipo").change(function(){
+                var id_tipo = $(this).val();
+                get_empleados(id_tipo);
+            });
+
+            function get_tipo_usuarios(){
+                $.ajax({
+                url: "php/funciones.php",
+                type: "POST",
+                data: "opc=get_tipo_usuarios",
+                dataType: "json",
+                //una vez finalizado correctamente
+                success: function(json){
+                    if(json.success){
+                        var li_tipo_usuarios = "<option value=''></option>";
+                        for (let i = 0; i < json.data.length; i++) {
+                            li_tipo_usuarios += '<option value ="'+json.data[i].id_tipo+'">'+json.data[i].nombre_tipo+'</option>';
+                        }
+                        $("#select_tipo").html(li_tipo_usuarios);
+                        $("#select_tipo").select2({placeholder: 'Selecciona una opción'});
+
+                    }else{
+                        swal('Oops!',json.message,'error');
+                    }
+                },
+                //si ha ocurrido un error
+                error: function(error){                    
+                    swal('Oops!','Error Fatal, consulta a suporte tecnico','error');
+                    console.log(error.responseText);                        
+                }
+                });
+            }
+
+            function get_empleados(id){
+                $.ajax({
+                    url: "php/funciones.php",
+                    type: "POST",
+                    data: 'opc=get_nom_usuarios&id_tipo='+id,
+                    dataType: "json",
+                    success: function(json){
+                        console.log(json);
+                        var html = "<option value=''></option>"+
+                                    "<option value='0'>TODOS</option>";
+                        for (var i = 0; i < json.data.length; i++) {
+                            html += '<option value="'+json.data[i].id_usuario+'">'+json.data[i].nombres+' '+json.data[i].apellido_pat+' '+json.data[i].apellido_mat+'</option>';
+                        }
+                        $("#select_usuario").html(html);
+                        $("#select_usuario").select2({placeholder: 'Selecciona una opción'});    ;
+                    },
+                    error:function(error){
+
+                    }
+                });
+            }
+        </script>
+
     </body>
 </html>

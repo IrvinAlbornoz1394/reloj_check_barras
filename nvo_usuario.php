@@ -163,8 +163,6 @@
                                             <div class="form-group">
                                                 <label>Departamento</label>
                                                 <select class="select2" name="departamento" id="select_departamento">
-                                                    <option value="">Informatica</option>
-                                                    <option value="">Finanzas</option>
                                                 </select>
                                             </div>
                                         </div>
