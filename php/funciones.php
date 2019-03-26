@@ -30,6 +30,9 @@
 		case 'get_usuario':
 			get_usuario();
 			break;
+		case 'get_tabla_insidencias':
+			get_tabla_insidencias();
+			break;
 		case 'carga_excel':
 			carga_excel();
 			break;
@@ -547,6 +550,53 @@
 		$json = array('success' => $success,
 					  'message' => $message,
 					  'data' => $tipos);
+		echo json_encode($json);
+	}
+
+	function get_tabla_insidencias(){
+		$mysqli = conexion();
+		if(!$mysqli){
+			$json = array('success' => false,
+			              'message' => 'Error al conectar con la BD');
+			echo json_encode($json);
+			exit();
+		}
+		$success = true;
+		$message = "OK";
+		$insidencias = [];
+		$id_plantel = 1;
+		$fecha_i = $_POST['fecha_i'];
+		$fecha_f = $_POST['fecha_f'];
+		$id_usuario = $_POST['usuario'];
+		$tipo_usuario = $_POST['tipo_usuario'];
+		$filtro = "";
+		if($id_usuario !== '0'){
+			$filtro = " AND id_usuario = $id_usuario";
+		}
+
+		$query = "SELECT i.*,u.nombres, u.apellido_pat,u.apellido_mat, u.puesto, u.file_foto from insidencias i INNER JOIN usuarios u on u.id_usuario = i.id_usuario INNER JOIN tipo_usuarios tu ON tu.id_tipo_usuario = u.id_tipo_usuario Where (fecha BETWEEN '$fecha_i' AND '$fecha_f')".$filtro;
+		// $query = "SELECT u.*,tu.nombre_tipo_usuario, p.nombre_p, d.nombre_departamento FROM usuarios u inner join tipo_usuarios tu On u.id_tipo_usuario = tu.id_tipo_usuario INNER JOIN planteles p ON p.id_plantel = u.id_plantel INNER JOIN departamentos d ON d.id_departamento = u.id_departamento WHERE u.id_plantel =".$id_plantel;
+		$result = $mysqli->query($query);
+		if(!$result){
+			$success = false;
+			$message = "No se encontraron resultados de usuarios";
+		}
+		while ($row = mysqli_fetch_array($result)) {
+			$insidencias[] = array('id_insidencia' => $row['id_insidencia'],
+						  'id_usuario' => $row['id_usuario'],
+						  'nombres' => $row['nombres'],
+						  'apellido_pat' => $row['apellido_pat'],
+						  'apellido_mat' => $row['apellido_mat'],
+						  'fecha' => $row['fecha'],
+						  'dia' => $row['dia_semana'],
+						  'check' => $row['h_checkout'],
+						  'puesto' => $row['puesto'],
+						  'foto' => $row['file_foto']
+						  );
+		}
+		$json = array('success' => $success,
+					  'message' => $message,
+					  'data' => $insidencias);
 		echo json_encode($json);
 	}
 
