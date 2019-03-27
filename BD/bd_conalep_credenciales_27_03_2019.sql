@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-03-2019 a las 00:10:49
+-- Tiempo de generación: 22-03-2019 a las 23:24:48
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -118,7 +118,6 @@ INSERT INTO `horas` (`id_hora`, `h_entrada`, `h_salida`) VALUES
 --
 
 CREATE TABLE `horas_x_horario` (
-  `id_hxh` int(11) NOT NULL,
   `id_hora` int(11) NOT NULL,
   `id_horario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -127,8 +126,8 @@ CREATE TABLE `horas_x_horario` (
 -- Volcado de datos para la tabla `horas_x_horario`
 --
 
-INSERT INTO `horas_x_horario` (`id_hxh`, `id_hora`, `id_horario`) VALUES
-(1, 1, 1);
+INSERT INTO `horas_x_horario` (`id_hora`, `id_horario`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -153,9 +152,7 @@ INSERT INTO `insidencias` (`id_insidencia`, `id_usuario`, `id_horario`, `fecha`,
 (1, 39, 1, '2019-03-22', 'Viernes', '15:53:53'),
 (2, 39, 1, '2019-03-22', 'Viernes', '15:58:50'),
 (3, 34, 1, '2019-03-22', 'Viernes', '15:58:59'),
-(6, 21, 1, '2019-03-22', 'Viernes', '16:00:09'),
-(12, 39, 1, '2019-03-25', 'Lunes', '16:46:04'),
-(14, 39, 1, '2019-03-25', 'Lunes', '16:56:00');
+(6, 21, 1, '2019-03-22', 'Viernes', '16:00:09');
 
 -- --------------------------------------------------------
 
@@ -245,8 +242,7 @@ INSERT INTO `tipo_usuarios` (`id_tipo_usuario`, `nombre_tipo_usuario`) VALUES
 (2, 'Docente'),
 (3, 'Alumno'),
 (4, 'Servicio Social'),
-(5, 'Practicas Profesionales'),
-(6, 'Directivos');
+(5, 'Practicas Profesionales');
 
 -- --------------------------------------------------------
 
@@ -289,15 +285,13 @@ INSERT INTO `usuarios` (`id_usuario`, `id_tipo_usuario`, `id_plantel`, `nombres`
 (31, 1, 1, 'GABRIELA', 'BARROSO', 'VALLEJOS', 'ENC. DEL DEPTO. DE ORIENTACóN EDUCATIVA', 'gabi.jpg', '5c93c62f77e26.jpg', 0, NULL, NULL, 1, 8, '105c93c62f'),
 (32, 1, 1, 'ROBERTO ENRIQUE', 'CHAN', 'MAS', 'AUXILIAR DE FORMACIóN TECNICA', 'IMG_20190227_134211 (1).jpg', '5c93c8f41ff9f.jpg', 0, NULL, NULL, 1, 7, '105c93c8f4'),
 (33, 1, 1, 'BLANCA LETICIA', 'MAY', 'BRITO', 'COORDINADORA DE ENFERMERíA', 'Foto de GAGO???? (3).jpg', '5c93ca8f1534a.jpg', 0, NULL, NULL, 1, 9, '105c93ca8f'),
-(34, 1, 1, 'CRISTINA', 'GóMEZ ', 'CHI', 'ASISTENTE DE DIRECCIóN', 'Foto de GAGO???? (1).jpg', '5c93d0ef207a6.jpg', 0, '', 'd41d8cd98f00b204e9800998ecf8427e', 1, 10, '105c93cfc6'),
+(34, 1, 1, 'CRISINA', 'GóMEZ ', 'CHI', 'ASISTENTE DE DIRECCIóN', 'Foto de GAGO???? (1).jpg', '5c93d0ef207a6.jpg', 1, '', 'd41d8cd98f00b204e9800998ecf8427e', 1, 10, '105c93cfc6'),
 (35, 1, 1, 'MARIA DE LOS ANGELES', 'HERNANDEZ', 'CHENA', 'PREFECTO', 'MARY.jpg', '5c951f66baf83.jpg', 0, NULL, NULL, 1, 6, '105c93d1ef'),
-(36, 1, 1, 'JESUS MELCHOR', 'QUIÑONES', 'GONGORA', 'AUXILIAR DE ENFERMERIA', 'chucho.jpg', '5c93d27d7656c.jpg', 0, NULL, NULL, 1, 9, '105c93d27d'),
-(37, 1, 1, 'ELIZABETH', 'YEH', 'CEBALLOS', 'TITULAR DE PRGANO DE CONTROL INTERNO ', 'IMG_20190326_120750.jpg', '5c9a7cf908c6a.jpg', 0, NULL, NULL, 1, 11, '105c93d394'),
-(38, 1, 1, 'ELDA', 'MARIN', 'CRUZ', 'COORDINADOR ', 'IMG_20190326_120736.jpg', '5c9a7d0d64483.jpg', 0, NULL, NULL, 1, 11, '105c93d3a9'),
+(36, 1, 1, 'JESUS MELCHOR', 'QUIÑONEZ', 'GONGORA', 'AUXILIAR DE ENFERMERIA', 'chucho.jpg', '5c93d27d7656c.jpg', 0, NULL, NULL, 1, 9, '105c93d27d'),
+(37, 1, 1, 'ELIZABETH', 'YEH', 'CEBALLOS', 'TITULAR DE PRGANO DE CONTROL INTERNO ', NULL, NULL, 0, NULL, NULL, 1, 11, '105c93d394'),
+(38, 1, 1, 'ELDA', 'MARIN', 'CRUZ', 'COORDINADOR ', NULL, NULL, 0, NULL, NULL, 1, 11, '105c93d3a9'),
 (39, 1, 1, 'IRVIN', 'ALBORNOZ', 'VAZQUEZ', 'ENC. DE INFORMATICA', 'FB_IMG_1553188819439.jpg', '5c93d44bde879.jpg', 0, NULL, NULL, 1, 1, '105c93d44b'),
-(40, 1, 1, 'GIOVANA', 'MALDONADO', 'NAVARRO', 'PREFECTO', 'IMG_20190321_131019.jpg', '5c93e23a5ba45.jpg', 0, NULL, NULL, 1, 6, '105c93e23a'),
-(41, 6, 1, 'DAVID', 'AGUILAR ', 'OTERO', 'SUBDIRECTOR DEL PLANTEL', 'david.jpg', '5c9bb3b751b76.jpg', 0, NULL, NULL, 1, 10, '105c9bb3b7'),
-(42, 6, 1, 'ARTURO', 'SABIDO', 'GONGORA', 'DIRECTOR DEL PLANTEL', 'arturo.jpg', '5c9bb3d91f8e5.jpg', 0, NULL, NULL, 1, 10, '105c9bb3d9');
+(40, 1, 1, 'GIOVANA', 'MALDONADO', 'NAVARRO', 'PREFECTO', 'IMG_20190321_131019.jpg', '5c93e23a5ba45.jpg', 0, NULL, NULL, 1, 6, '105c93e23a');
 
 --
 -- Índices para tablas volcadas
@@ -333,7 +327,6 @@ ALTER TABLE `horas`
 -- Indices de la tabla `horas_x_horario`
 --
 ALTER TABLE `horas_x_horario`
-  ADD PRIMARY KEY (`id_hxh`),
   ADD KEY `id_hora` (`id_hora`),
   ADD KEY `id_horario` (`id_horario`);
 
@@ -396,7 +389,7 @@ ALTER TABLE `departamentos`
 -- AUTO_INCREMENT de la tabla `horarios`
 --
 ALTER TABLE `horarios`
-  MODIFY `id_horario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_horario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `horas`
@@ -405,16 +398,10 @@ ALTER TABLE `horas`
   MODIFY `id_hora` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT de la tabla `horas_x_horario`
---
-ALTER TABLE `horas_x_horario`
-  MODIFY `id_hxh` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
 -- AUTO_INCREMENT de la tabla `insidencias`
 --
 ALTER TABLE `insidencias`
-  MODIFY `id_insidencia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_insidencia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `institucion`
@@ -438,13 +425,13 @@ ALTER TABLE `tipo_contrato`
 -- AUTO_INCREMENT de la tabla `tipo_usuarios`
 --
 ALTER TABLE `tipo_usuarios`
-  MODIFY `id_tipo_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_tipo_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- Restricciones para tablas volcadas

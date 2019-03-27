@@ -363,7 +363,7 @@
 		$id_tipo = $_POST['id_tipo'];
 
 
-		$query = "SELECT id_usuario, nombres, apellido_pat, apellido_mat from usuarios WHERE id_tipo_usuario = $id_tipo AND id_plantel =".$id_plantel;
+		$query = "SELECT id_usuario, nombres, apellido_pat, apellido_mat, puesto, file_foto  from usuarios WHERE id_tipo_usuario = $id_tipo AND id_plantel =".$id_plantel;
 		$result = $mysqli->query($query);
 		if(!$result){
 			$success = false;
@@ -373,7 +373,9 @@
 			$usuarios[] = array('id_usuario' => $row['id_usuario'],
 						  'nombres' => $row['nombres'],
 						  'apellido_pat' => $row['apellido_pat'],
-						  'apellido_mat' => $row['apellido_mat']
+						  'apellido_mat' => $row['apellido_mat'],
+						  'puesto' => $row['puesto'],
+						  'foto' => $row['file_foto']
 						  );
 			}	
 		}
