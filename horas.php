@@ -30,23 +30,11 @@
         <script src='vendors/time-line/resource-common/main.js'></script>
         <script src='vendors/time-line/resource-timeline/main.js'></script>
 
-        <style>
-            .b-r{
-                border-right:  1px solid #e7eaec;
-            }
-        </style>
 
-
-
-
-        <!-- App styles -->
         <link rel="stylesheet" href="css/app.min.css">
         <style>
-            #table_horario th{
-                padding: 0 8px;
-            }
-            #div_responsive{
-                height: 341px;
+            #div_alto{
+                
             }
         </style>
 
@@ -110,7 +98,7 @@
                         <li><a href="usuarios.php"><i class="zmdi zmdi-accounts"></i>Usuarios</a></li>
                         <li><a href="registros.php"><i class="zmdi zmdi-home"></i>Insidencias</a></li>
                         <li class="navigation__active"><a href="horarios.php"><i class="zmdi zmdi-accounts"></i>Horarios</a></li>
-                        <li><a href="horas.php"><i class="zmdi zmdi-home"></i>Horas</a></li>
+                        <li><a href="registros.php"><i class="zmdi zmdi-home"></i>Horas</a></li>
                     </ul>
                 </div>
             </aside>
@@ -139,21 +127,28 @@
                     <div class="messages">
                         <div class="messages__sidebar">
                             <div class="toolbar toolbar--inner mb-3">
-                                <div class="toolbar__label">Malinda Hollaway</div>
-
+                                <div class="toolbar__label">Horarios Existentes</div>
                                 <div class="actions toolbar__actions">
-                                    <a href="" class="actions__item zmdi zmdi-plus"></a>
+                                    <button class="btn btn-info btn--icon waves-effect" id="add_horario"><i class="zmdi zmdi-plus zmdi-hc-fw"></i></button>
                                 </div>
                             </div>
-
-                            <div class="messages__search">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Search...">
-                                    <i class="form-group__bar"></i>
+                            <form action="" class="col-md-12" id="form_horario_nvo" style="display: none;">
+                                <div class="input-group">
+                                    <input type="text" name="nombre_horario" class="form-control" id="nombre_horario" autocomplete="off">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-success waves-effect">
+                                            <i class="zmdi zmdi-save zmdi-hc-fw"></i>
+                                        </button>
+                                    </span>
                                 </div>
-                            </div>
-
-                            <div class="listview listview--hover" id="div_usuarios">
+                            </form>
+                            
+                            <div class="listview listview--hover table-responsive" id="div_alto">
+                                <table class="table table-bordered">
+                                    <tbody id="tbody_horarios">
+                                        
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
@@ -161,10 +156,15 @@
                         <div class="messages__body">
                             <div class="messages__header">
                                 <div class="toolbar toolbar--inner mb-0">
-                                    <div class="toolbar__label">Horarios</div>
+                                    <div class="toolbar__label">Horas Asignadas al Horario</div>
 
                                     <div class="actions toolbar__actions">
-                                        <button class="btn btn-success" id="btn-modal-horario"> <i class="fa fa-plus"></i> Agregar</button>
+                                        <button class="btn btn-success" id="btn-modal-horario"> <i class="fa fa-plus"></i> Borrar Horas
+                                            <i class="zmdi zmdi-delete zmdi-hc-fw"></i>
+                                        </button>
+                                        <button class="btn btn-success" id="btn-modal-horario"> <i class="fa fa-plus"></i> Gestionar Horas
+                                            <i class="zmdi zmdi-time zmdi-hc-fw"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -199,7 +199,7 @@
                                     </table>
                                     <div class="table-responsive" id="div_responsive">
                                         <table class="table table-hover table-bordered">
-                                            <tbody id="tbody_horarios">
+                                            <!-- <tbody id="tbody_horarios">
                                                 <tr class="b-b">
                                                     <td>09:00 - 17:00</td>
                                                 </tr>
@@ -242,7 +242,7 @@
                                                 <tr class="b-b">
                                                     <td>09:00 - 17:00</td>
                                                 </tr>
-                                            </tbody>
+                                            </tbody> -->
                                         </table>
                                     </div>
                                 </div>
@@ -343,43 +343,60 @@
         <script src="js/funciones.js"></script>
 
         <script>
-            $(document).ready(function(){
-                get_usuarios();
-                var horarios = get_horarios_completos();
+            var horarios = "";
+            var id_horario = "";
+             $(document).ready(function(){
+                json = get_horarios_completos();
+                set_tabla_horarios(json);
+                var h = $("#div_alto").height();
+                $("#div_alto").height(h - 100);
             });
 
 
-            function get_usuarios(){
+            function set_tabla_horarios(json){
+                if(json.success){
+                    console.log(json);
+                    var html = "";
+                    for (var i = 0; i < json.data.length; i++) {
+                            html += '<tr>'+
+                             '<td>'+json.data[i].nombre_horario+'</td>'+
+                             '</tr>';
+                    }
+                    $("#tbody_horarios").html(html);
+                }
+            }
+
+            $("#add_horario").click(function(){
+                $(this).attr('disabled',true);
+                $("#form_horario_nvo").show();
+            });
+
+            $("#form_horario_nvo").on('submit',function(e){
+                console.log('ok');
+                var datos = $(this).serialize();
+                datos+= "&id_horario="+id_horario+"&opc=guardar_nom_horario";
                 $.ajax({
                     url: "php/funciones.php",
                     type: "POST",
-                    data: 'opc=get_nom_usuarios&id_tipo=1',
+                    data: datos,
                     dataType: "json",
                     success: function(json){
-                        console.log(json);
-                        var html = "";
-                        for (var i = 0; i < json.data.length; i++) {
-                            html += '<a class="listview__item" id="'+json.data[i].id_usuario+'">'+
-                                        '<img src="img/usuarios/'+json.data[i].foto+'" alt="" class="listview__img">'+
-                                        '<div class="listview__content">'+
-                                            '<div class="listview__heading">'+json.data[i].nombres+' '+json.data[i].apellido_pat+' '+json.data[i].apellido_mat+'</div>'+
-                                            '<p>'+json.data[i].puesto+'</p>'+
-                                        '</div>'+
-                                    '</a>';
+                        if(json.success){
+                            swal('Correcto!',json.message,'success');    
+                        }else{
+                            swal('Oops!',json.message,'error');
                         }
-                        $("#div_usuarios").html(html);
+                        
                     },
                     error:function(error){
-
-                    }
+                        swal('Oops!',error,'error');
+                    },
                 });
-            }
+                e.preventDefault();
+            });
 
-
-            $("#btn-modal-horario").click(function(){
-                $("#modal-horario").modal('show');
-            })
         </script>
+
         <script>
             var horaE = '09:00:00';
             var horaS = '17:00:00';
@@ -408,13 +425,13 @@
                     { id: 'dom', title: 'Domingo' }
                   ],
                   events: [
-                    { id: '1', resourceId: 'lun', start: '2019-03-28T'+horaE, end: '2019-03-28T'+horaS, title: '02:30 - 17:25' },
-                    { id: '2', resourceId: 'mar', start: '2019-03-28T'+horaE, end: '2019-03-28T'+horaS, title: 'event 2' },
-                    { id: '3', resourceId: 'mie', start: '2019-03-28T'+horaE, end: '2019-03-28T'+horaS, title: 'event 3' },
-                    { id: '4', resourceId: 'jue', start: '2019-03-28T'+horaE, end: '2019-03-28T'+horaS, title: 'event 4' },
-                    { id: '4', resourceId: 'vie', start: '2019-03-28T'+horaE, end: '2019-03-28T'+horaS, title: 'event 4' },
-                    { id: '5', resourceId: 'sab', start: '2019-03-28T'+horaE, end: '2019-03-28T'+horaS, title: 'event 5' },
-                    { id: '4', resourceId: 'Dom', start: '2019-03-28T'+horaE, end: '2019-03-28T'+horaS, title: 'event 4' }
+                    { id: '1', resourceId: 'lun', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: '02:30 - 17:25' },
+                    { id: '2', resourceId: 'mar', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: 'event 2' },
+                    { id: '3', resourceId: 'mie', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: 'event 3' },
+                    { id: '4', resourceId: 'jue', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: 'event 4' },
+                    { id: '4', resourceId: 'vie', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: 'event 4' },
+                    { id: '5', resourceId: 'sab', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: 'event 5' },
+                    { id: '4', resourceId: 'Dom', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: 'event 4' }
                   ]
                 });
                 calendar.render();

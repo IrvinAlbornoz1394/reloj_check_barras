@@ -33,6 +33,12 @@
 		case 'get_tabla_insidencias':
 			get_tabla_insidencias();
 			break;
+		case 'get_horarios_completos':
+			get_horarios_completos();
+			break;
+		case 'guardar_nom_horario':
+			guardar_nom_horario();
+			break;
 		case 'carga_excel':
 			carga_excel();
 			break;
@@ -307,6 +313,32 @@
 		return $success;
 	}
 
+	function guardar_nom_horario(){
+		$mysqli = conexion();
+		if(!$mysqli){
+			$json = array('success' => false,
+			              'message' => 'Error al conectar con la BD');
+			echo json_encode($json);
+			exit();
+		}
+		$success = true;
+		$message = "OK";
+
+		$nombre_horario = $_POST['nombre_horario'];
+		$id_horario = $_POST['id_horario'];
+		$id_institucion = 1;
+		$id_plantel = 1;
+		$query = "INSERT INTO horarios (id_horario,nombre_horario,id_institucion,id_plantel) VALUES  ('$id_horario','$nombre_horario','$id_institucion','$id_plantel)";
+		if(!$mysqli->query($query)){
+			$success = false;
+			$message = "Ocurrio un error en la consulta, intentalo mas tarde";
+		}
+		$json = array('success' => $success,
+					  'message' => $message
+					  );
+		echo json_encode($json);
+	}
+
 	function get_usuarios(){
 		$mysqli = conexion();
 		if(!$mysqli){
@@ -522,6 +554,40 @@
 					  'data' => $tipos);
 		echo json_encode($json);
 	}
+
+	function get_horarios_completos(){
+		$mysqli = conexion();
+		if(!$mysqli){
+			$json = array('success' => false,
+			              'message' => 'Error al conectar con la BD');
+			echo json_encode($json);
+			exit();
+		}
+		$success = true;
+		$message = "OK";
+		$horarios = [];
+
+		$id_institucion =1;
+
+
+		$query = "SELECT * FROM horarios Where id_institucion = $id_institucion";
+		$result = $mysqli->query($query);
+		if(!$result){
+			$success = false;
+			$message = "No se encontraron resultados";
+		}
+		while ($row = mysqli_fetch_array($result)) {
+			$horarios[] = array(
+							'id_horario' => $row['id_horario'],
+							'nombre_horario' => $row['nombre_horario']
+						);
+		}
+		$json = array('success' => $success,
+					  'message' => $message,
+					  'data' => $horarios);
+		echo json_encode($json);
+	}
+
 	function get_departamentos(){
 		$mysqli = conexion();
 		if(!$mysqli){
