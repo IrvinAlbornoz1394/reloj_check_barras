@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-03-2019 a las 00:10:49
+-- Tiempo de generación: 02-04-2019 a las 01:42:51
 -- Versión del servidor: 10.1.38-MariaDB
 -- Versión de PHP: 7.3.2
 
@@ -57,15 +57,19 @@ INSERT INTO `departamentos` (`id_departamento`, `nombre_departamento`, `id_insti
 
 CREATE TABLE `horarios` (
   `id_horario` int(11) NOT NULL,
-  `nombre_horario` varchar(50) NOT NULL
+  `nombre_horario` varchar(50) NOT NULL,
+  `id_institucion` int(11) NOT NULL,
+  `id_plantel` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `horarios`
 --
 
-INSERT INTO `horarios` (`id_horario`, `nombre_horario`) VALUES
-(1, '09:00 - 17:00');
+INSERT INTO `horarios` (`id_horario`, `nombre_horario`, `id_institucion`, `id_plantel`) VALUES
+(1, '09:00 - 17:00', 1, 1),
+(2, 'Prefecto Mañana', 1, 1),
+(3, 'Prefecto Tarde', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -294,7 +298,7 @@ INSERT INTO `usuarios` (`id_usuario`, `id_tipo_usuario`, `id_plantel`, `nombres`
 (36, 1, 1, 'JESUS MELCHOR', 'QUIÑONES', 'GONGORA', 'AUXILIAR DE ENFERMERIA', 'chucho.jpg', '5c93d27d7656c.jpg', 0, NULL, NULL, 1, 9, '105c93d27d'),
 (37, 1, 1, 'ELIZABETH', 'YEH', 'CEBALLOS', 'TITULAR DE PRGANO DE CONTROL INTERNO ', 'IMG_20190326_120750.jpg', '5c9a7cf908c6a.jpg', 0, NULL, NULL, 1, 11, '105c93d394'),
 (38, 1, 1, 'ELDA', 'MARIN', 'CRUZ', 'COORDINADOR ', 'IMG_20190326_120736.jpg', '5c9a7d0d64483.jpg', 0, NULL, NULL, 1, 11, '105c93d3a9'),
-(39, 1, 1, 'IRVIN', 'ALBORNOZ', 'VAZQUEZ', 'ENC. DE INFORMATICA', 'FB_IMG_1553188819439.jpg', '5c93d44bde879.jpg', 0, NULL, NULL, 1, 1, '105c93d44b'),
+(39, 1, 1, 'IRVIN', 'ALBORNOZ', 'VAZQUEZ', 'ENC. DE INFORMÁTICA', 'IMG_20190328_084359 (1).jpg', '5c9e40308a652.jpg', 0, NULL, NULL, 1, 1, '105c93d44b'),
 (40, 1, 1, 'GIOVANA', 'MALDONADO', 'NAVARRO', 'PREFECTO', 'IMG_20190321_131019.jpg', '5c93e23a5ba45.jpg', 0, NULL, NULL, 1, 6, '105c93e23a'),
 (41, 6, 1, 'DAVID', 'AGUILAR ', 'OTERO', 'SUBDIRECTOR DEL PLANTEL', 'david.jpg', '5c9bb3b751b76.jpg', 0, NULL, NULL, 1, 10, '105c9bb3b7'),
 (42, 6, 1, 'ARTURO', 'SABIDO', 'GONGORA', 'DIRECTOR DEL PLANTEL', 'arturo.jpg', '5c9bb3d91f8e5.jpg', 0, NULL, NULL, 1, 10, '105c9bb3d9');
@@ -314,7 +318,9 @@ ALTER TABLE `departamentos`
 -- Indices de la tabla `horarios`
 --
 ALTER TABLE `horarios`
-  ADD PRIMARY KEY (`id_horario`);
+  ADD PRIMARY KEY (`id_horario`),
+  ADD KEY `fk_id_institucion_idx` (`id_institucion`),
+  ADD KEY `fk_id_plantel_idx` (`id_plantel`);
 
 --
 -- Indices de la tabla `horario_x_usuario`
@@ -396,7 +402,7 @@ ALTER TABLE `departamentos`
 -- AUTO_INCREMENT de la tabla `horarios`
 --
 ALTER TABLE `horarios`
-  MODIFY `id_horario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_horario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `horas`
