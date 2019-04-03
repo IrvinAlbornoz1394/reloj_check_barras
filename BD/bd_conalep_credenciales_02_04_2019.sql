@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 4.8.5
 -- https://www.phpmyadmin.net/
 --
--- Servidor: localhost
--- Tiempo de generación: 03-04-2019 a las 18:26:33
--- Versión del servidor: 10.1.36-MariaDB
--- Versión de PHP: 7.2.10
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 02-04-2019 a las 01:42:51
+-- Versión del servidor: 10.1.38-MariaDB
+-- Versión de PHP: 7.3.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -69,13 +69,7 @@ CREATE TABLE `horarios` (
 INSERT INTO `horarios` (`id_horario`, `nombre_horario`, `id_institucion`, `id_plantel`) VALUES
 (1, '09:00 - 17:00', 1, 1),
 (2, 'Prefecto Mañana', 1, 1),
-(3, 'Prefecto Tarde', 1, 1),
-(4, '7:00 - 15:00', 1, 1),
-(5, 'Nevuo nuevo', 1, 1),
-(6, 'Nuevo 1', 1, 1),
-(7, 'okokokoko', 1, 1),
-(8, 'dssdasd', 1, 1),
-(9, 'ssssssss', 1, 1);
+(3, 'Prefecto Tarde', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -130,20 +124,15 @@ INSERT INTO `horas` (`id_hora`, `h_entrada`, `h_salida`) VALUES
 CREATE TABLE `horas_x_horario` (
   `id_hxh` int(11) NOT NULL,
   `id_hora` int(11) NOT NULL,
-  `id_horario` int(11) NOT NULL,
-  `dia` enum('Lunes','Martes','Miercoles','Jueves','Viernes','Sabado','Domingo') NOT NULL
+  `id_horario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `horas_x_horario`
 --
 
-INSERT INTO `horas_x_horario` (`id_hxh`, `id_hora`, `id_horario`, `dia`) VALUES
-(1, 1, 1, 'Lunes'),
-(2, 1, 1, 'Martes'),
-(3, 1, 1, 'Miercoles'),
-(4, 1, 1, 'Jueves'),
-(5, 1, 1, 'Viernes');
+INSERT INTO `horas_x_horario` (`id_hxh`, `id_hora`, `id_horario`) VALUES
+(1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -413,7 +402,7 @@ ALTER TABLE `departamentos`
 -- AUTO_INCREMENT de la tabla `horarios`
 --
 ALTER TABLE `horarios`
-  MODIFY `id_horario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_horario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `horas`
@@ -425,7 +414,7 @@ ALTER TABLE `horas`
 -- AUTO_INCREMENT de la tabla `horas_x_horario`
 --
 ALTER TABLE `horas_x_horario`
-  MODIFY `id_hxh` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_hxh` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `insidencias`
