@@ -39,6 +39,9 @@
 		case 'guardar_nom_horario':
 			guardar_nom_horario();
 			break;
+		case 'get_info_horario':
+			get_info_horario();
+			break;
 		case 'carga_excel':
 			carga_excel();
 			break;
@@ -328,7 +331,7 @@
 		$id_horario = $_POST['id_horario'];
 		$id_institucion = 1;
 		$id_plantel = 1;
-		$query = "INSERT INTO horarios (id_horario,nombre_horario,id_institucion,id_plantel) VALUES  ('$id_horario','$nombre_horario','$id_institucion','$id_plantel)";
+		$query = "INSERT INTO horarios (id_horario,nombre_horario,id_institucion,id_plantel) VALUES  ('$id_horario','$nombre_horario','$id_institucion','$id_plantel')";
 		if(!$mysqli->query($query)){
 			$success = false;
 			$message = "Ocurrio un error en la consulta, intentalo mas tarde";
@@ -570,7 +573,7 @@
 		$id_institucion =1;
 
 
-		$query = "SELECT * FROM horarios Where id_institucion = $id_institucion";
+		$query = "SELECT * FROM horarios"; /* Where id_institucion = $id_institucion"; */
 		$result = $mysqli->query($query);
 		if(!$result){
 			$success = false;
@@ -709,6 +712,41 @@
 		$json = array('success' => $success,
 					  'message' => $message,
 					  'data' => $usuarios);
+		echo json_encode($json);
+	}
+
+	function get_info_horario(){
+		$mysqli = conexion();
+		if(!$mysqli){
+			$json = array('success' => false,
+			              'message' => 'Error al conectar con la BD');
+			echo json_encode($json);
+			exit();
+		}
+		$id_horario = $_POST['id'];
+		$success = true;
+		$message = "OK";
+		$id_plantel = 1;
+		$horas  = [];
+
+
+		$query = "SELECT h.id_horario,nombre_horario,hxh.dia,hs.h_entrada,hs.h_salida FROM horarios h LEFT JOIN horas_x_horario hxh ON h.id_horario = hxh.id_horario LEFT JOIN horas hs ON hxh.id_hora = hs.id_hora Where h.id_horario =".$id_horario;
+		$result = $mysqli->query($query);
+		if(!$result){
+			$success = false;
+			$message = "No se encontraron resultados de usuarios";
+		}
+		while ($row = mysqli_fetch_array($result)) {
+			$horas[] = array('id_horario' => $row['id_horario'],
+						  'nombre_horario' => $row['nombre_horario'],
+						  'dia' => $row['dia'],
+						  'h_entrada' => $row['h_entrada'],
+						  'h_salida' => $row['h_salida']
+						);
+		}
+		$json = array('success' => $success,
+					  'message' => $message,
+					  'data' => $horas);
 		echo json_encode($json);
 	}
 

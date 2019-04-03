@@ -33,8 +33,8 @@
 
         <link rel="stylesheet" href="css/app.min.css">
         <style>
-            #div_alto{
-                
+            .td-hover{
+                cursor:pointer;
             }
         </style>
 
@@ -134,7 +134,7 @@
                             </div>
                             <form action="" class="col-md-12" id="form_horario_nvo" style="display: none;">
                                 <div class="input-group">
-                                    <input type="text" name="nombre_horario" class="form-control" id="nombre_horario" autocomplete="off">
+                                    <input type="text" name="nombre_horario" placeholder="Nombre Horario" class="form-control" id="nombre_horario" autocomplete="off">
                                     <span class="input-group-btn">
                                         <button type="submit" class="btn btn-success waves-effect">
                                             <i class="zmdi zmdi-save zmdi-hc-fw"></i>
@@ -142,9 +142,9 @@
                                     </span>
                                 </div>
                             </form>
-                            
+                            <hr>
                             <div class="listview listview--hover table-responsive" id="div_alto">
-                                <table class="table table-bordered">
+                                <table class="table table-bordered table-hover">
                                     <tbody id="tbody_horarios">
                                         
                                     </tbody>
@@ -347,28 +347,46 @@
             var id_horario = "";
              $(document).ready(function(){
                 json = get_horarios_completos();
-                set_tabla_horarios(json);
-                var h = $("#div_alto").height();
-                $("#div_alto").height(h - 100);
+                horarios = json.data;
+                if(json.success){
+                    set_tabla_horarios(horarios);
+                }
             });
-
+            function info_horario(id){
+                var datos = "opc=get_info_horario&id="+id;
+                $.ajax({
+                    url: "php/funciones.php",
+                    type: "POST",
+                    data: datos,
+                    dataType: "json",
+                    success: function(json){
+                        if(json.success){
+                            prepara_grafica(json.data);
+                        }else{
+                            swal('Oops!',json.message,'error');
+                        }
+                        
+                    },
+                    error:function(error){
+                        swal('Oops!',error,'error');
+                    },
+                });
+            }
 
             function set_tabla_horarios(json){
-                if(json.success){
-                    console.log(json);
-                    var html = "";
-                    for (var i = 0; i < json.data.length; i++) {
-                            html += '<tr>'+
-                             '<td>'+json.data[i].nombre_horario+'</td>'+
-                             '</tr>';
-                    }
-                    $("#tbody_horarios").html(html);
+                var html = "";
+                for (var i = 0; i < json.length; i++) {
+                        html += '<tr>'+
+                            '<td class="td-hover" onclick="info_horario('+json[i].id_horario+');">'+json[i].nombre_horario+'</td>'+
+                            '</tr>';
                 }
+                $("#tbody_horarios").html(html);
             }
 
             $("#add_horario").click(function(){
                 $(this).attr('disabled',true);
                 $("#form_horario_nvo").show();
+                $("#nombre_horario").focus();
             });
 
             $("#form_horario_nvo").on('submit',function(e){
@@ -383,6 +401,16 @@
                     success: function(json){
                         if(json.success){
                             swal('Correcto!',json.message,'success');    
+
+                            json = get_horarios_completos();
+                            horarios = json.data;
+                            if(json.success){
+                                set_tabla_horarios(horarios);
+                            }
+
+                            $('#form_horario_nvo')[0].reset();
+                            $("#add_horario").attr('disabled',false);
+                            $("#form_horario_nvo").hide();
                         }else{
                             swal('Oops!',json.message,'error');
                         }
@@ -395,12 +423,29 @@
                 e.preventDefault();
             });
 
-        </script>
 
-        <script>
-            var horaE = '09:00:00';
-            var horaS = '17:00:00';
-            document.addEventListener('DOMContentLoaded', function() {
+
+            function prepara_grafica(json){
+                var eventos = [];
+                for (let i = 0; i < json.length; i++) {
+                    var item = { 
+                            id:  i+1,
+                            resourceId: json[i].dia, 
+                            start: '2019-04-02T'+json[i].h_entrada,
+                            end: '2019-04-02T'+json[i].h_salida,
+                            title: json[i].h_entrada+" "+json[i].h_salida
+                        }
+                    eventos.push(item);
+                }
+                
+                set_grafica(eventos);
+            }
+
+            function set_grafica(eventos){
+                console.log(eventos);
+                $("#calendar").fullCalendar( 'addEventSource', eventos );
+            }
+            
                 var calendarEl = document.getElementById('calendar');
                 var calendar = new FullCalendar.Calendar(calendarEl, {
                   schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
@@ -416,26 +461,17 @@
                     right: ''
                   },
                   resources: [
-                    { id: 'lun', title: 'Lunes' },
-                    { id: 'mar', title: 'Martes', eventColor: 'green' },
-                    { id: 'mie', title: 'Miercoles', eventColor: 'orange' },
-                    { id: 'jue', title: 'Jueves' },
-                    { id: 'vie', title: 'Viernes' },
-                    { id: 'sab', title: 'Sabado' },
-                    { id: 'dom', title: 'Domingo' }
+                    { id: 'Lunes', title: 'Lunes' },
+                    { id: 'Martes', title: 'Martes', eventColor: 'green' },
+                    { id: 'Miercoles', title: 'Miercoles', eventColor: 'orange' },
+                    { id: 'Jueves', title: 'Jueves' },
+                    { id: 'Viernes', title: 'Viernes' },
+                    { id: 'Sabado', title: 'Sabado' },
+                    { id: 'Domingo', title: 'Domingo' }
                   ],
-                  events: [
-                    { id: '1', resourceId: 'lun', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: '02:30 - 17:25' },
-                    { id: '2', resourceId: 'mar', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: 'event 2' },
-                    { id: '3', resourceId: 'mie', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: 'event 3' },
-                    { id: '4', resourceId: 'jue', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: 'event 4' },
-                    { id: '4', resourceId: 'vie', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: 'event 4' },
-                    { id: '5', resourceId: 'sab', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: 'event 5' },
-                    { id: '4', resourceId: 'Dom', start: '2019-03-29T'+horaE, end: '2019-03-29T'+horaS, title: 'event 4' }
-                  ]
+                  events: ''
                 });
                 calendar.render();
-            });
         </script>
     </body>
 </html>
